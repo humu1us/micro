@@ -53,7 +53,7 @@ class PluginLoader:
 
     def reload(self):
         self.__plugins.clear()
-        c = Config()
+        c = Config.instance()
         self.__load_plugins(c.key("plugin_path"))
 
     def __load_plugins(self, path):
