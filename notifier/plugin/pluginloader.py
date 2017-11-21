@@ -1,7 +1,7 @@
 import os
 import importlib.util as imp
 from .pluginbase import PluginBase
-from ..conf import config
+from ..core.config import Config
 
 
 class PluginLoader:
@@ -53,7 +53,8 @@ class PluginLoader:
 
     def reload(self):
         self.__plugins.clear()
-        self.__load_plugins(config.plugin_path)
+        c = Config.instance()
+        self.__load_plugins(c.key("plugin_path"))
 
     def __load_plugins(self, path):
         if not path:
