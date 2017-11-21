@@ -1,5 +1,5 @@
 class PluginBase:
-    def run():
+    def run(**kwargs):
         err = "Error, this is an abstract method " \
               "you need implement this in a derived class"
         raise NotImplementedError(err)
