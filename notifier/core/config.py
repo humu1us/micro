@@ -1,7 +1,9 @@
 import json
 import os
+from .private.singleton import Singleton
 
 
+@Singleton
 class Config:
     NOTIFIER_CONFIG = "NOTIFIER_CONFIG"
 
