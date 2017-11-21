@@ -5,6 +5,7 @@
     "queue_name": "",
     "hostname": "",
     "num_workers": ,
+    "log_level": "",
     "log_file": "",
     "pid_file": ""
 }
