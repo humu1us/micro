@@ -1,3 +1,10 @@
 {
-    plugin_path : ""
+    "plugin_path": "",
+    "app_name": "",
+    "broker_url": "",
+    "queue_name": "",
+    "hostname": "",
+    "num_workers": ,
+    "log_file": "",
+    "pid_file": ""
 }
