@@ -2,7 +2,7 @@ from celery.utils.log import get_task_logger
 from ..core.celery import NotifierApp
 
 app = NotifierApp.instance()
-log = get_task_logger(__name__)
+log = get_task_logger("logger")
 
 
 @app.task(queue="notifier_queue")
