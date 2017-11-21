@@ -6,10 +6,10 @@ class Config:
     NOTIFIER_CONFIG = "NOTIFIER_CONFIG"
 
     def __init__(self):
-        self.__path = os.environ.get("NOTIFIER_CONFIG", "")
+        self.__path = os.environ.get(Config.NOTIFIER_CONFIG, "")
 
         if not self.__path:
-            raise RuntimeError("NOTIFIER_CONFIG not defined")
+            raise RuntimeError(Config.NOTIFIER_CONFIG + " not defined")
 
         self.__conf = {}
 
