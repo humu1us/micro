@@ -13,7 +13,11 @@ class PluginLoader:
         if not self.__plugins:
             self.reload()
 
-        return self.__plugins.get(name, None)
+        pdesc = self.__plugins.get(name, None)
+        if not pdesc:
+            return None
+
+        return pdesc.instance
 
     def all_names(self):
         if not self.__plugins:
@@ -35,7 +39,7 @@ class PluginLoader:
         if not plg:
             return None
 
-        return plg.log_desc
+        return plg.long_desc
 
     def help(self, name):
         if not self.__plugins:
@@ -51,7 +55,7 @@ class PluginLoader:
         self.__plugins.clear()
         self.__load_plugins(config.plugin_path)
 
-    def __load_plugins_from_path(self, path):
+    def __load_plugins(self, path):
         if not path:
             return
 
@@ -60,7 +64,7 @@ class PluginLoader:
             if not os.path.isdir(plugin_folder):
                 continue
 
-            plg = self.__load_plugin(plugin_folder)
+            plg = self.__load_plugin_from_file(plugin_folder)
             if not plg:
                 continue
 
