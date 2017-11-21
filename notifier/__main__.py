@@ -1,4 +1,5 @@
-from .core.celery import app
+from .core.celery import NotifierApp
 
 if __name__ == "__main__":
-    app
+    app = NotifierApp.instance()
+    app.start_app()
