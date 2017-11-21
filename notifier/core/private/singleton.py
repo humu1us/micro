@@ -9,9 +9,6 @@ class Singleton(object):
             self.__instance = self.__decorated()
             return self.__instance
 
-    def get_class(self):
-        return self.__decorated
-
     def __call__(self):
         err = "Singletons must be accessed through 'Instance()' method."
         raise NotImplementedError(err)
