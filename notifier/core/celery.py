@@ -19,7 +19,7 @@ class NotifierApp(Celery):
         args = ["celery",
                 "-A", "notifier.api.celery_api",
                 "-Q", self.__config.key("queue_name"),
-                "-l", self.__config.key("log_level"),
+                "-l", self.__config.key("log_from"),
                 "--logfile=" + log_file,
                 "--pidfile=" + pid_file,
                 "multi", "start"]
