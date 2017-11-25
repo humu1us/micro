@@ -32,7 +32,14 @@ setup(
 
     keywords='Messages',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
-    install_requires=[],
+    install_requires=[
+        'amqp==2.2.2',
+        'billiard==3.5.0.3',
+        'celery==4.1.0',
+        'kombu==4.1.0',
+        'pytz==2017.3',
+        'vine==1.1.4'
+    ],
     extras_require={},
     package_data={},
     data_files=[],
