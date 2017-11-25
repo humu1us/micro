@@ -8,11 +8,9 @@ class PluginLoader:
     def __init__(self):
         self.__INTERFACE = "interface.py"
         self.__plugins = {}
+        self.__load()
 
     def instance(self, name):
-        if not self.__plugins:
-            self.reload()
-
         pdesc = self.__plugins.get(name, None)
         if not pdesc:
             return None
@@ -20,9 +18,6 @@ class PluginLoader:
         return pdesc.instance
 
     def all_names(self):
-        if not self.__plugins:
-            self.reload()
-
         result = {}
         names = self.__plugins.keys()
         for n in names:
@@ -31,9 +26,6 @@ class PluginLoader:
         return result
 
     def long_description(self, name):
-        if not self.__plugins:
-            self.reload()
-
         plg = self.__plugins.get(name, None)
 
         if not plg:
@@ -42,16 +34,13 @@ class PluginLoader:
         return plg.long_desc
 
     def help(self, name):
-        if not self.__plugins:
-            self.reload()
-
         plg = self.__plugins.get(name, None)
 
         if not plg:
             return None
         return plg.help_str
 
-    def reload(self):
+    def __load(self):
         self.__plugins.clear()
         c = Config.instance()
         self.__load_plugins(c.key("plugin_path"))
