@@ -7,6 +7,9 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
+with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
+    requirements = f.read().splitlines()
+
 setup(
     name='notifier',
 
@@ -32,14 +35,7 @@ setup(
 
     keywords='Messages',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
-    install_requires=[
-        'amqp==2.2.2',
-        'billiard==3.5.0.3',
-        'celery==4.1.0',
-        'kombu==4.1.0',
-        'pytz==2017.3',
-        'vine==1.1.4'
-    ],
+    install_requires=requirements,
     extras_require={},
     package_data={},
     data_files=[],
