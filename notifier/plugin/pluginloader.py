@@ -15,7 +15,7 @@ class PluginLoader:
         if not pdesc:
             return None
 
-        return pdesc.instance
+        return pdesc.instance()
 
     def list_all(self):
         result = {}
