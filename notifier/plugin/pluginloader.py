@@ -17,7 +17,7 @@ class PluginLoader:
 
         return pdesc.instance
 
-    def all_names(self):
+    def list_all(self):
         result = {}
         names = self.__plugins.keys()
         for n in names:
