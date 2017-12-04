@@ -17,7 +17,7 @@ class PluginLoader:
 
         return pdesc.instance()
 
-    def list_all(self):
+    def list(self):
         result = {}
         names = self.__plugins.keys()
         for n in names:
@@ -25,7 +25,7 @@ class PluginLoader:
 
         return result
 
-    def long_description(self, name):
+    def info(self, name):
         plg = self.__plugins.get(name, None)
 
         if not plg:
