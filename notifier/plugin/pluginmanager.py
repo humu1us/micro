@@ -4,7 +4,7 @@ from .pluginbase import PluginBase
 from ..core.config import Config
 
 
-class PluginLoader:
+class PluginManager:
     def __init__(self):
         self.__INTERFACE = "interface.py"
         self.__plugins = {}
