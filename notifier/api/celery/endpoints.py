@@ -1,11 +1,12 @@
 from ...core.notifierapp import NotifierApp
 from ...helper.celeryapi import celery_name
 from ...helper.celeryapi import queue
+from ...helper.celeryapi import plugin_path
 from ...plugin.pluginmanager import PluginManager
 
 
 app = NotifierApp.instance()
-manager = PluginManager()
+manager = PluginManager(plugin_path())
 QUEUE = queue()
 
 

@@ -1,12 +1,12 @@
 import os
 import importlib.util as imp
 from .pluginbase import PluginBase
-from ..core.config import Config
 
 
 class PluginManager:
-    def __init__(self):
+    def __init__(self, plugin_path):
         self.__INTERFACE = "interface.py"
+        self.__plugin_path = plugin_path
         self.__plugins = {}
         self.__load()
 
@@ -42,8 +42,7 @@ class PluginManager:
 
     def __load(self):
         self.__plugins.clear()
-        c = Config.instance()
-        self.__load_plugins(c.key("plugin_path"))
+        self.__load_plugins(self.__plugin_path)
 
     def __load_plugins(self, path):
         if not path:
