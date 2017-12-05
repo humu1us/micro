@@ -1,24 +1,27 @@
 from ...core.notifierapp import NotifierApp
 from ...helper.celeryapi import celery_name
 from ...helper.celeryapi import queue
-from ...core.apiimpl import ApiImpl
+from ...helper.celeryapi import plugin_path
+from ...plugin.pluginmanager import PluginManager
 
 
 app = NotifierApp.instance()
-api = ApiImpl()
+manager = PluginManager(plugin_path())
 QUEUE = queue()
 
 
-@app.task(name=celery_name("plugin_list"), queue=QUEUE)
-def plugin_list():
-    return api.plugin_list()
+@app.task(name=celery_name("list"), queue=QUEUE)
+def list():
+    return manager.list()
 
 
-@app.task(name=celery_name("plugin_info"), queue=QUEUE)
-def plugin_info(name):
-    return api.plugin_info(name)
+@app.task(name=celery_name("info"), queue=QUEUE)
+def info(name):
+    return manager.info(name)
 
 
-@app.task(name=celery_name("notify"), queue=QUEUE)
-def notify():
-    return api.notify()
+@app.task(name=celery_name("run"), queue=QUEUE)
+def run(plugin_name, **kwargs):
+    plg = manager.instance(plugin_name)
+    result = plg.run(**kwargs)
+    return result

@@ -1,12 +1,12 @@
 import os
 import importlib.util as imp
 from .pluginbase import PluginBase
-from ..core.config import Config
 
 
-class PluginLoader:
-    def __init__(self):
+class PluginManager:
+    def __init__(self, plugin_path):
         self.__INTERFACE = "interface.py"
+        self.__plugin_path = plugin_path
         self.__plugins = {}
         self.__load()
 
@@ -15,9 +15,9 @@ class PluginLoader:
         if not pdesc:
             return None
 
-        return pdesc.instance
+        return pdesc.instance()
 
-    def all_names(self):
+    def list(self):
         result = {}
         names = self.__plugins.keys()
         for n in names:
@@ -25,7 +25,7 @@ class PluginLoader:
 
         return result
 
-    def long_description(self, name):
+    def info(self, name):
         plg = self.__plugins.get(name, None)
 
         if not plg:
@@ -42,8 +42,7 @@ class PluginLoader:
 
     def __load(self):
         self.__plugins.clear()
-        c = Config.instance()
-        self.__load_plugins(c.key("plugin_path"))
+        self.__load_plugins(self.__plugin_path)
 
     def __load_plugins(self, path):
         if not path:
