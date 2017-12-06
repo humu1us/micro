@@ -1,10 +1,8 @@
 import os
 from celery import Celery
 from .config import Config
-from .private.singleton import Singleton
 
 
-@Singleton
 class NotifierApp(Celery):
     def __init__(self):
         self.__config = Config.instance()

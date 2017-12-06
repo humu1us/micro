@@ -5,7 +5,7 @@ from ...helper.celeryapi import plugin_path
 from ...plugin.pluginmanager import PluginManager
 
 
-app = NotifierApp.instance()
+app = NotifierApp()
 manager = PluginManager(plugin_path())
 QUEUE = queue()
 
