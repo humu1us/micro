@@ -14,7 +14,10 @@ class Config:
         self.__load()
 
     def key(self, name):
-        return self.__conf.get(name, None)
+        param = self.__conf.get(name, None)
+        if not param:
+            raise RuntimeError("Parameter " + name + " not in config")
+        return param
 
     def __load(self):
         with open(self.__path) as conf_file:
