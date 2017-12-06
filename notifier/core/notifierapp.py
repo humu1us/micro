@@ -10,6 +10,7 @@ class NotifierApp(Celery):
         self.conf.update(broker_url=config.key("broker_url"),
                          result_backend="rpc://")
 
+        self.__namespace = "Notifier"
         self.__queue = config.key("queue_name")
         self.__plugin_path = config.key("plugin_path")
         self.__log_from = config.key("log_from")
@@ -23,6 +24,9 @@ class NotifierApp(Celery):
 
     def queue(self):
         return self.__queue
+
+    def function_name(self, name):
+        return self.__namespace + "." + name
 
     def __load_args(self):
         log_file = os.path.join(self.__log_file, "%N.log")
