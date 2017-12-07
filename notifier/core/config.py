@@ -14,7 +14,7 @@ class Config:
         self.__load()
 
     def key(self, name):
-        param = self.__conf.get(name, None)
+        param = self.__conf.get(name)
         if not param:
             raise RuntimeError("Parameter " + name + " not in config")
         return param
