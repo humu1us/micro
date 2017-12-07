@@ -1,9 +1,7 @@
 import json
 import os
-from .private.singleton import Singleton
 
 
-@Singleton
 class Config:
     def __init__(self):
         self.__NOTIFIER_CONFIG = "NOTIFIER_CONFIG"
@@ -13,14 +11,15 @@ class Config:
             raise RuntimeError(self.__NOTIFIER_CONFIG + " not defined")
 
         self.__conf = {}
+        self.__load()
 
     def key(self, name):
-        if not self.__conf:
-            self.reload()
+        param = self.__conf.get(name)
+        if not param:
+            raise RuntimeError("Parameter " + name + " not in config")
+        return param
 
-        return self.__conf.get(name, None)
-
-    def reload(self):
+    def __load(self):
         with open(self.__path) as conf_file:
             conf_data = conf_file.read()
             self.__conf = json.loads(conf_data)
