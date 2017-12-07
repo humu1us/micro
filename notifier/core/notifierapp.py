@@ -6,16 +6,16 @@ from .config import Config
 class NotifierApp(Celery):
     def __init__(self):
         config = Config()
-        super().__init__(config.key("app_name"))
-        self.conf.update(broker_url=config.key("broker_url"),
-                         result_backend="rpc://")
+        super().__init__("Notifier",
+                         broker=config.key("broker_url"),
+                         backend="rpc://")
 
         self.__namespace = "Notifier"
         self.__queue = config.key("queue_name")
         self.__plugin_path = config.key("plugin_path")
         self.__log_from = config.key("log_from")
-        self.__log_file = config.key("log_file")
-        self.__pid_file = config.key("pid_file")
+        self.__log_path = config.key("log_path")
+        self.__pid_path = config.key("pid_path")
         self.__hostname = config.key("hostname")
         self.__workers = config.key("num_workers")
 
@@ -29,15 +29,15 @@ class NotifierApp(Celery):
         return self.__namespace + "." + name
 
     def __load_args(self):
-        log_file = os.path.join(self.__log_file, "%N.log")
-        pid_file = os.path.join(self.__pid_file, "%N.pid")
+        log_path = os.path.join(self.__log_path, "%N.log")
+        pid_path = os.path.join(self.__pid_path, "%N.pid")
 
         args = ["celery",
                 "-A", "notifier.api.celery.endpoints",
                 "-Q", self.__queue,
                 "-l", self.__log_from,
-                "--logfile=" + log_file,
-                "--pidfile=" + pid_file,
+                "--logfile=" + log_path,
+                "--pidfile=" + pid_path,
                 "multi", "start"]
         workers = self.__create_workers()
         return args + workers
