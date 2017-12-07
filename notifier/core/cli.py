@@ -40,3 +40,7 @@ class CLI(ArgumentParser):
                           "--pid_path",
                           required=False,
                           help="Set the pid file path")
+        self.add_argument("--default_params",
+                          default=False,
+                          action='store_true',
+                          help="Show default parameters")
