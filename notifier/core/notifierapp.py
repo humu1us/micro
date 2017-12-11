@@ -1,23 +1,23 @@
 import os
 from celery import Celery
-from .config import Config
+from .params import Params
 
 
 class NotifierApp(Celery):
     def __init__(self):
-        config = Config()
+        params = Params()
         super().__init__("Notifier",
-                         broker=config.key("broker_url"),
+                         broker=params.broker_url(),
                          backend="rpc://")
 
         self.__namespace = "Notifier"
-        self.__queue = config.key("queue_name")
-        self.__plugin_path = config.key("plugin_path")
-        self.__log_from = config.key("log_from")
-        self.__log_path = config.key("log_path")
-        self.__pid_path = config.key("pid_path")
-        self.__hostname = config.key("hostname")
-        self.__workers = config.key("num_workers")
+        self.__queue = params.queue_name()
+        self.__plugin_path = params.plugin_path()
+        self.__log_from = params.log_from()
+        self.__log_path = params.log_path()
+        self.__pid_path = params.pid_path()
+        self.__hostname = params.hostname()
+        self.__workers = params.num_workers()
 
     def plugin_path(self):
         return self.__plugin_path
