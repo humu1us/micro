@@ -18,7 +18,7 @@ class Params:
             "pid_path": "/var/run"
         }
         self.__cli = CLI()
-        self.__args, unk = self.__cli.parse_known_args()
+        self.__args = self.__cli.parse_args()
         self.__check_default()
         self.__config = Config()
 
