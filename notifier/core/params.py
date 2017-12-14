@@ -14,7 +14,7 @@ class Params:
             "hostname": "notifier",
             "num_workers": 1,
             "log_from": "INFO",
-            "log_path": "/var/logs",
+            "log_path": "/var/log",
             "pid_path": "/var/run"
         }
         self.__cli = CLI()
