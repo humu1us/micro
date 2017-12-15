@@ -8,10 +8,6 @@ class CLI(ArgumentParser):
         self.__parse_args()
 
     def __parse_args(self):
-        self.add_argument("-p",
-                          "--plugin-path",
-                          required=False,
-                          help="Set the plugin path")
         self.add_argument("-b",
                           "--broker-url",
                           required=False,

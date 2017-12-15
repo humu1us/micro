@@ -12,15 +12,11 @@ class NotifierApp(Celery):
 
         self.__namespace = "Notifier"
         self.__queue = params.queue_name()
-        self.__plugin_path = params.plugin_path()
         self.__log_from = params.log_from()
         self.__log_path = params.log_path()
         self.__pid_path = params.pid_path()
         self.__hostname = params.hostname()
         self.__workers = params.num_workers()
-
-    def plugin_path(self):
-        return self.__plugin_path
 
     def queue(self):
         return self.__queue

@@ -4,9 +4,13 @@ from .pluginbase import PluginBase
 
 
 class PluginManager:
-    def __init__(self, plugin_path):
+    def __init__(self):
         self.__INTERFACE = "interface.py"
-        self.__plugin_path = plugin_path
+        self.__plugin_path = os.environ.get("NOTIFIER_PLUGIN_PATH")
+
+        if not self.__plugin_path:
+            raise RuntimeError("NOTIFIER_PLUGIN_PATH not set")
+
         self.__plugins = {}
         self.__load()
 

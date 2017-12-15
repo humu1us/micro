@@ -8,7 +8,6 @@ from .config import Config
 class Params:
     def __init__(self):
         self.__default = {
-            "plugin_path": "/etc/notifier/plugins",
             "broker_url": "",
             "queue_name": "notifier_queue",
             "hostname": "notifier",
@@ -42,11 +41,6 @@ class Params:
             return self.__config.key(config_key)
 
         return self.__default[config_key]
-
-    def plugin_path(self):
-        return self.__priority_param(cli_param=self.__args.plugin_path,
-                                     env_var_name="NOTIFIER_PLUGIN_PATH",
-                                     config_key="plugin_path")
 
     def broker_url(self):
         return self.__priority_param(self.__args.broker_url,

@@ -3,7 +3,7 @@ from ..plugin.pluginmanager import PluginManager
 
 
 app = NotifierApp()
-manager = PluginManager(app.plugin_path())
+manager = PluginManager()
 
 
 @app.task(name=app.function_name("list"), queue=app.queue())
