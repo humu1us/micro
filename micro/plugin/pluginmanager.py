@@ -22,7 +22,7 @@ class PluginManager:
         return plugin_path
 
     def instance(self, name):
-        pdesc = self.__plugins.get(name, None)
+        pdesc = self.__plugins.get(name)
         if not pdesc:
             return None
 
@@ -37,7 +37,7 @@ class PluginManager:
         return result
 
     def info(self, name):
-        plg = self.__plugins.get(name, None)
+        plg = self.__plugins.get(name)
 
         if not plg:
             return None
@@ -45,7 +45,7 @@ class PluginManager:
         return plg.long_desc
 
     def help(self, name):
-        plg = self.__plugins.get(name, None)
+        plg = self.__plugins.get(name)
 
         if not plg:
             return None
