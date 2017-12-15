@@ -30,106 +30,55 @@ class Params:
     def __print_default(self):
         print(json.dumps(self.__default, indent=4))
 
+    def __priority_param(self, cli_param, env_var_name, config_key):
+        if cli_param:
+            return cli_param
+
+        env_var = os.environ.get(env_var_name)
+        if env_var:
+            return env_var
+
+        if self.__config.key(config_key):
+            return self.__config.key(config_key)
+
+        return self.__default[config_key]
+
     def plugin_path(self):
-        if self.__args.plugin_path:
-            return self.__args.plugin_path
-
-        plugin_path_os = os.environ.get("NOTIFIER_PLUGIN_PATH")
-        if plugin_path_os:
-            return plugin_path_os
-
-        if self.__config.key("plugin_path"):
-            return self.__config.key("plugin_path")
-
-        return self.__default["plugin_path"]
+        return self.__priority_param(cli_param=self.__args.plugin_path,
+                                     env_var_name="NOTIFIER_PLUGIN_PATH",
+                                     config_key="plugin_path")
 
     def broker_url(self):
-        if self.__args.broker_url:
-            return self.__args.broker_url
-
-        broker_url_os = os.environ.get("NOTIFIER_BROKER_URL")
-        if broker_url_os:
-            return broker_url_os
-
-        if self.__config.key("broker_url"):
-            return self.__config.key("broker_url")
-
-        return None
+        return self.__priority_param(self.__args.broker_url,
+                                     "NOTIFIER_BROKER_URL",
+                                     "broker_url")
 
     def queue_name(self):
-        if self.__args.queue_name:
-            return self.__args.queue_name
-
-        queue_name_os = os.environ.get("NOTIFIER_QUEUE_NAME")
-        if queue_name_os:
-            return queue_name_os
-
-        if self.__config.key("queue_name"):
-            return self.__config.key("queue_name")
-
-        return self.__default["queue_name"]
+        return self.__priority_param(self.__args.queue_name,
+                                     "NOTIFIER_QUEUE_NAME",
+                                     "queue_name")
 
     def hostname(self):
-        if self.__args.hostname:
-            return self.__args.hostname
-
-        hostname_os = os.environ.get("NOTIFIER_HOSTNAME")
-        if hostname_os:
-            return hostname_os
-
-        if self.__config.key("hostname"):
-            return self.__config.key("hostname")
-
-        return self.__default["hostname"]
+        return self.__priority_param(self.__args.hostname,
+                                     "NOTIFIER_HOSTNAME",
+                                     "hostname")
 
     def num_workers(self):
-        if self.__args.num_workers:
-            return self.__args.num_workers
-
-        num_workers_os = os.environ.get("NOTIFIER_NUM_WORKERS")
-        if num_workers_os:
-            return num_workers_os
-
-        if self.__config.key("num_workers"):
-            return self.__config.key("num_workers")
-
-        return self.__default["num_workers"]
+        return self.__priority_param(self.__args.num_workers,
+                                     "NOTIFIER_NUM_WORKERS",
+                                     "num_workers")
 
     def log_from(self):
-        if self.__args.log_from:
-            return self.__args.log_from
-
-        log_from_os = os.environ.get("NOTIFIER_LOG_FROM")
-        if log_from_os:
-            return log_from_os
-
-        if self.__config.key("log_from"):
-            return self.__config.key("log_from")
-
-        return self.__default["log_from"]
+        return self.__priority_param(self.__args.log_from,
+                                     "NOTIFIER_LOG_FROM",
+                                     "log_from")
 
     def log_path(self):
-        if self.__args.log_path:
-            return self.__args.log_path
-
-        log_path_os = os.environ.get("NOTIFIER_LOG_PATH")
-        if log_path_os:
-            return log_path_os
-
-        if self.__config.key("log_path"):
-            return self.__config.key("log_path")
-
-        return self.__default["log_path"]
+        return self.__priority_param(self.__args.log_path,
+                                     "NOTIFIER_LOG_PATH",
+                                     "log_path")
 
     def pid_path(self):
-        if self.__args.pid_path:
-            return self.__args.pid_path
-
-        pid_path_os = os.environ.get("NOTIFIER_PID_PATH")
-        if pid_path_os:
-            return pid_path_os
-
-        if self.__config.key("pid_path"):
-            return self.__config.key("pid_path")
-
-        return self.__default["pid_path"]
+        return self.__priority_param(self.__args.pid_path,
+                                     "NOTIFIER_PID_PATH",
+                                     "pid_path")
