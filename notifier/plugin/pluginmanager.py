@@ -6,13 +6,20 @@ from .pluginbase import PluginBase
 class PluginManager:
     def __init__(self):
         self.__INTERFACE = "interface.py"
-        self.__plugin_path = os.environ.get("NOTIFIER_PLUGIN_PATH")
-
-        if not self.__plugin_path:
-            raise RuntimeError("NOTIFIER_PLUGIN_PATH not set")
-
+        self.__plugin_path = self.__plugin_path()
         self.__plugins = {}
         self.__load()
+
+    def __plugin_path(self):
+        plugin_path = os.environ.get("NOTIFIER_PLUGIN_PATH")
+
+        if not plugin_path:
+            raise RuntimeError("NOTIFIER_PLUGIN_PATH not set")
+
+        if not os.path.isdir(plugin_path):
+            raise RuntimeError("NOTIFIER_PLUGIN_PATH no name a folder")
+
+        return plugin_path
 
     def instance(self, name):
         pdesc = self.__plugins.get(name, None)
