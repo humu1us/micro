@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 from argparse import REMAINDER
+from argparse import SUPPRESS
 
 
 class CLI(ArgumentParser):
@@ -42,4 +43,5 @@ class CLI(ArgumentParser):
                           action="store_true",
                           help="Show default parameters")
         self.add_argument("ignored",
-                          nargs=REMAINDER)
+                          nargs=REMAINDER,
+                          help=SUPPRESS)
