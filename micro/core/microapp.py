@@ -3,11 +3,11 @@ from celery import Celery
 from .params import Params
 
 
-class NotifierApp(Celery):
+class MicroApp(Celery):
     def __init__(self):
         params = Params()
 
-        self.__namespace = "Notifier"
+        self.__namespace = "Micro"
         self.__queue = params.queue_name()
         self.__broker_url = params.broker_url()
         self.__log_from = params.log_from()
@@ -16,7 +16,7 @@ class NotifierApp(Celery):
         self.__hostname = params.hostname()
         self.__workers = params.num_workers()
 
-        super().__init__("Notifier",
+        super().__init__("Micro",
                          broker=self.__broker_url,
                          backend="rpc://")
 
@@ -31,7 +31,7 @@ class NotifierApp(Celery):
         pid_path = os.path.join(self.__pid_path, "%N.pid")
 
         args = ["celery",
-                "-A", "notifier.api.endpoints",
+                "-A", "micro.api.endpoints",
                 "-Q", self.__queue,
                 "-l", self.__log_from,
                 "-b", self.__broker_url,

@@ -1,5 +1,5 @@
-from .core.notifierapp import NotifierApp
+from .core.microapp import MicroApp
 
 if __name__ == "__main__":
-    app = NotifierApp()
+    app = MicroApp()
     app.start_app()
