@@ -9,8 +9,8 @@ class Params:
     def __init__(self):
         self.__default = {
             "broker_url": "",
-            "queue_name": "notifier_queue",
-            "hostname": "notifier",
+            "queue_name": "micro_queue",
+            "hostname": "micro",
             "num_workers": 1,
             "log_from": "INFO",
             "log_path": "/var/log",
@@ -44,35 +44,35 @@ class Params:
 
     def broker_url(self):
         return self.__priority_param(self.__args.broker_url,
-                                     "NOTIFIER_BROKER_URL",
+                                     "MICRO_BROKER_URL",
                                      "broker_url")
 
     def queue_name(self):
         return self.__priority_param(self.__args.queue_name,
-                                     "NOTIFIER_QUEUE_NAME",
+                                     "MICRO_QUEUE_NAME",
                                      "queue_name")
 
     def hostname(self):
         return self.__priority_param(self.__args.hostname,
-                                     "NOTIFIER_HOSTNAME",
+                                     "MICRO_HOSTNAME",
                                      "hostname")
 
     def num_workers(self):
         return self.__priority_param(self.__args.num_workers,
-                                     "NOTIFIER_NUM_WORKERS",
+                                     "MICRO_NUM_WORKERS",
                                      "num_workers")
 
     def log_from(self):
         return self.__priority_param(self.__args.log_from,
-                                     "NOTIFIER_LOG_FROM",
+                                     "MICRO_LOG_FROM",
                                      "log_from")
 
     def log_path(self):
         return self.__priority_param(self.__args.log_path,
-                                     "NOTIFIER_LOG_PATH",
+                                     "MICRO_LOG_PATH",
                                      "log_path")
 
     def pid_path(self):
         return self.__priority_param(self.__args.pid_path,
-                                     "NOTIFIER_PID_PATH",
+                                     "MICRO_PID_PATH",
                                      "pid_path")
