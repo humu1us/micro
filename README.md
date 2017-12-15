@@ -1,1 +1,1 @@
-# Notifier (A.K.A. Micro)
+# Micro
