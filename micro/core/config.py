@@ -4,8 +4,8 @@ import os
 
 class Config:
     def __init__(self):
-        self.__NOTIFIER_CONFIG = "NOTIFIER_CONFIG"
-        self.__path = os.environ.get(self.__NOTIFIER_CONFIG, "")
+        self.__MICRO_CONFIG = "MICRO_CONFIG"
+        self.__path = os.environ.get(self.__MICRO_CONFIG, "")
         self.__conf = {}
         if self.__path:
             self.__load()
