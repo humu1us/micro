@@ -1,18 +1,18 @@
 FROM python:3.6-alpine3.6
 
 # Define config location
-ENV NOTIFIER_CONFIG=/etc/notifier/config/config.json
+ENV MICRO_CONFIG=/etc/micro/config/config.json
 
 # Set directories
-RUN mkdir -p /etc/notifier/config
-RUN mkdir /etc/notifier/plugins
-RUN mkdir /var/log/notifier
-RUN mkdir /var/run/notifier
+RUN mkdir -p /etc/micro/config
+RUN mkdir /etc/micro/plugins
+RUN mkdir /var/log/micro
+RUN mkdir /var/run/micro
 
 # install application
-RUN mkdir /notifier
-COPY . /notifier
-RUN pip install /notifier
-RUN rm -rf /notifier
+RUN mkdir /micro
+COPY . /micro
+RUN pip install /micro
+RUN rm -rf /micro
 
-CMD python -m notifier && tail -f /dev/null
+CMD python -m micro && tail -f /dev/null
