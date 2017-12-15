@@ -33,7 +33,7 @@ class NotifierApp(Celery):
         pid_path = os.path.join(self.__pid_path, "%N.pid")
 
         args = ["celery",
-                "-A", "notifier.api.celery.endpoints",
+                "-A", "notifier.api.endpoints",
                 "-Q", self.__queue,
                 "-l", self.__log_from,
                 "--logfile=" + log_path,

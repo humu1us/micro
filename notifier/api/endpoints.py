@@ -1,5 +1,5 @@
-from ...core.notifierapp import NotifierApp
-from ...plugin.pluginmanager import PluginManager
+from ..core.notifierapp import NotifierApp
+from ..plugin.pluginmanager import PluginManager
 
 
 app = NotifierApp()
