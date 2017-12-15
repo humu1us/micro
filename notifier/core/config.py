@@ -6,18 +6,12 @@ class Config:
     def __init__(self):
         self.__NOTIFIER_CONFIG = "NOTIFIER_CONFIG"
         self.__path = os.environ.get(self.__NOTIFIER_CONFIG, "")
-
-        if not self.__path:
-            raise RuntimeError(self.__NOTIFIER_CONFIG + " not defined")
-
         self.__conf = {}
-        self.__load()
+        if self.__path:
+            self.__load()
 
     def key(self, name):
-        param = self.__conf.get(name)
-        if not param:
-            raise RuntimeError("Parameter " + name + " not in config")
-        return param
+        return self.__conf.get(name)
 
     def __load(self):
         with open(self.__path) as conf_file:
