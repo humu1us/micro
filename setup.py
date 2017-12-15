@@ -11,11 +11,11 @@ with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
     requirements = f.read().splitlines()
 
 setup(
-    name='notifier',
+    name='Micro',
 
     version='0.0.1',
 
-    description='Celery application to notify anything to elsewhere',
+    description='Celery platform to create microservices',
     long_description=long_description,
 
     url='',
@@ -33,7 +33,7 @@ setup(
         'Programming Language :: Python :: 3',
     ],
 
-    keywords='Messages',
+    keywords='Microservices celery',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     install_requires=requirements,
     extras_require={},

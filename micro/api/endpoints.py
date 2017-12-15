@@ -1,8 +1,8 @@
-from ..core.notifierapp import NotifierApp
+from ..core.microapp import MicroApp
 from ..plugin.pluginmanager import PluginManager
 
 
-app = NotifierApp()
+app = MicroApp()
 manager = PluginManager()
 
 
