@@ -11,13 +11,13 @@ class PluginManager:
         self.__load()
 
     def __plugin_path(self):
-        plugin_path = os.environ.get("NOTIFIER_PLUGIN_PATH")
+        plugin_path = os.environ.get("MICRO_PLUGIN_PATH")
 
         if not plugin_path:
-            raise RuntimeError("NOTIFIER_PLUGIN_PATH not set")
+            raise RuntimeError("MICRO_PLUGIN_PATH not set")
 
         if not os.path.isdir(plugin_path):
-            raise RuntimeError("NOTIFIER_PLUGIN_PATH no name a folder")
+            raise RuntimeError("MICRO_PLUGIN_PATH no name a folder")
 
         return plugin_path
 
