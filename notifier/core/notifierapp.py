@@ -6,17 +6,19 @@ from .params import Params
 class NotifierApp(Celery):
     def __init__(self):
         params = Params()
-        super().__init__("Notifier",
-                         broker=params.broker_url(),
-                         backend="rpc://")
 
         self.__namespace = "Notifier"
         self.__queue = params.queue_name()
+        self.__broker_url = params.broker_url()
         self.__log_from = params.log_from()
         self.__log_path = params.log_path()
         self.__pid_path = params.pid_path()
         self.__hostname = params.hostname()
         self.__workers = params.num_workers()
+
+        super().__init__("Notifier",
+                         broker=self.__broker_url,
+                         backend="rpc://")
 
     def queue(self):
         return self.__queue
@@ -32,6 +34,7 @@ class NotifierApp(Celery):
                 "-A", "notifier.api.endpoints",
                 "-Q", self.__queue,
                 "-l", self.__log_from,
+                "-b", self.__broker_url,
                 "--logfile=" + log_path,
                 "--pidfile=" + pid_path,
                 "multi", "start"]
