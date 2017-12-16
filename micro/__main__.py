@@ -1,5 +1,10 @@
 from .core.microapp import MicroApp
 
-if __name__ == "__main__":
+
+def main():
     app = MicroApp()
     app.start_app()
+
+
+if __name__ == "__main__":
+    main()
