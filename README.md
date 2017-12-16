@@ -72,7 +72,7 @@ Micro can be configurated through CLI, environment variables, config file and/or
 These arguments are the highest priority for Micro. So, these overwrite any other parameters set by any other method. The CLI arguments that can be used are:
 
 ```
-$ python -m micro -h
+$ micro -h
 usage: __main__.py [-h] [-b BROKER_URL] [-q QUEUE_NAME] [-H HOSTNAME]
                    [-w NUM_WORKERS] [-l LOG_FROM] [-lp LOG_PATH]
                    [-pp PID_PATH] [--default-params]
@@ -131,13 +131,13 @@ Config file example:
 ```
 
 A config file skeleton can be created using the following command:
-`$ python -m micro --default-params > config.json`
+`$ micro --default-params > config.json`
 
 ### Default values
 The default values are:
 
 ```
-$ python -m micro --default-params
+$ micro --default-params
 {
     "broker_url": "",
     "queue_name": "micro_queue",
