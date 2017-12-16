@@ -73,9 +73,9 @@ These arguments are the highest priority for Micro. So, these overwrite any othe
 
 ```
 $ micro -h
-usage: __main__.py [-h] [-b BROKER_URL] [-q QUEUE_NAME] [-H HOSTNAME]
-                   [-w NUM_WORKERS] [-l LOG_FROM] [-lp LOG_PATH]
-                   [-pp PID_PATH] [--default-params]
+usage: micro [-h] [-b BROKER_URL] [-q QUEUE_NAME] [-H HOSTNAME]
+             [-w NUM_WORKERS] [-l LOG_FROM] [-lp LOG_PATH] [-pp PID_PATH]
+             [--default-params]
 
 optional arguments:
   -h, --help            show this help message and exit
