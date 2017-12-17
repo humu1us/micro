@@ -4,11 +4,15 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
+
+def get_requirements(file_name):
+    req_path = path.join(here + '/requirements', file_name)
+    with open(req_path, encoding='utf-8') as f:
+        return f.read().splitlines()
+
+
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
-
-with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
-    requirements = f.read().splitlines()
 
 setup(
     name='Micro',
@@ -35,7 +39,7 @@ setup(
 
     keywords='Microservices celery',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
-    install_requires=requirements,
+    install_requires=get_requirements('default.txt'),
     extras_require={},
     package_data={},
     data_files=[],
