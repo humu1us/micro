@@ -1,18 +1,6 @@
 from unittest import TestCase
 from micro.core.cli import CLI
 
-# cli = CLI()
-# args = cli.parse_args([
-#     "-b", "url://user:pass@1234//",
-#     "-q", "queue name",
-#     "-H", "example_hostname",
-#     "-w", "5",
-#     "-l", "WARNING",
-#     "-lp", "/path/to/the/logs",
-#     "-pp", "/path/to/the/pids",
-#     "--default-params"
-# ])
-
 
 class TestCLI(TestCase):
     def __init__(self, *args, **kwargs):
