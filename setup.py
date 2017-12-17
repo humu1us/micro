@@ -40,6 +40,8 @@ setup(
     keywords='Microservices celery',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     install_requires=get_requirements('default.txt'),
+    setup_requires=get_requirements('test.txt'),
+    test_suite='tests',
     extras_require={},
     package_data={},
     data_files=[],
