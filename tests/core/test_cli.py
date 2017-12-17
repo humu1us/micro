@@ -35,8 +35,8 @@ class TestCLI(TestCase):
         self.assertEqual(self.args.log_from, "WARNING")
         self.assertEqual(self.args.log_path, "/path/to/the/logs")
         self.assertEqual(self.args.pid_path, "/path/to/the/pids")
-        self.assertEqual(self.args.default_params, True)
+        self.assertTrue(self.args.default_params)
 
     def test_defaul_params_arg(self):
         args = self.cli.parse_args(["-w", "3"])
-        self.assertEqual(args.default_params, False)
+        self.assertFalse(args.default_params)
