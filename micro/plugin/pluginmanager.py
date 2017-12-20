@@ -28,7 +28,7 @@ class PluginManager:
 
         return pdesc.instance()
 
-    def list(self):
+    def plugins(self):
         result = {}
         names = self.__plugins.keys()
         for n in names:

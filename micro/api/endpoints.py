@@ -6,9 +6,9 @@ app = MicroApp()
 manager = PluginManager()
 
 
-@app.task(name=app.function_name("list"), queue=app.queue())
-def list():
-    return manager.list()
+@app.task(name=app.function_name("plugins"), queue=app.queue())
+def plugins():
+    return manager.plugins()
 
 
 @app.task(name=app.function_name("info"), queue=app.queue())
