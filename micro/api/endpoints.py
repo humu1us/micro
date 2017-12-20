@@ -24,5 +24,7 @@ def help(name):
 @app.task(name=app.function_name("run"), queue=app.queue())
 def run(plugin_name, **kwargs):
     plg = manager.instance(plugin_name)
+    if not plg:
+        return "Plugin not found"
     result = plg.run(**kwargs)
     return result
