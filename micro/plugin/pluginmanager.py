@@ -76,6 +76,8 @@ class PluginManager:
 
     def __load_plugin_from_file(self, path):
         iface = os.path.join(path, self.__INTERFACE)
+        if not os.path.exists(iface):
+            return None
         spec = imp.spec_from_file_location("loaded_module", iface)
         module = imp.module_from_spec(spec)
         spec.loader.exec_module(module)
