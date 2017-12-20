@@ -3,9 +3,6 @@ from micro.plugin.pluginbase import PluginDescription
 
 
 class ExamplePlugin(PluginBase):
-    def __init__(self):
-        print("This is an example plugin")
-
     # This is the method executed by Micro
     def run(self, **kwargs):
         return "Hello " + kwargs["name"] + "!!!"
