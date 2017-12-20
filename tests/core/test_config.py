@@ -9,7 +9,7 @@ class TestConfig(TestCase):
         super().__init__(*args, **kwargs)
         self.parent = path.abspath(path.join(path.dirname(__file__),
                                              path.pardir))
-        self.file = path.join(self.parent, "test_config.json")
+        self.file = path.join(self.parent, "resources", "test_config.json")
         environ["MICRO_CONFIG"] = self.file
         self.config = Config()
 
