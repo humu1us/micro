@@ -21,10 +21,14 @@ class TestEndpoints(TestCase):
                "for that reason, we don't have a long description"
         self.assertEqual(info("Example Plugin"), resp)
 
+        self.assertIsNone(info("Non-existent plugin"))
+
     def test_help(self):
         from micro.api.endpoints import help
         self.assertEqual(help("Example Plugin"),
                          "Params: name type string; A name to greet")
+
+        self.assertIsNone(help("Non-existent plugin"))
 
     def test_run(self):
         from micro.api.endpoints import run
