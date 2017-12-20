@@ -34,3 +34,6 @@ class TestEndpoints(TestCase):
         from micro.api.endpoints import run
         self.assertEqual(run("Example Plugin", name="World"),
                          "Hello World!!!")
+
+        self.assertEqual(run("Non-existent plugin", name="World"),
+                         "Plugin not found")
