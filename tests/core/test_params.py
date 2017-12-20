@@ -63,5 +63,5 @@ class TestParams(TestCase):
     def __set_config_env(self):
         self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                                    os.path.pardir))
-        self.file = os.path.join(self.parent, "resources"  ,"test_config.json")
+        self.file = os.path.join(self.parent, "resources", "test_config.json")
         os.environ["MICRO_CONFIG"] = self.file
