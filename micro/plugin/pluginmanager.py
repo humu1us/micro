@@ -56,9 +56,6 @@ class PluginManager:
         self.__load_plugins(self.__plugin_path)
 
     def __load_plugins(self, path):
-        if not path:
-            return
-
         for f in os.listdir(path):
             plugin_folder = os.path.join(path, f)
             if not os.path.isdir(plugin_folder):
