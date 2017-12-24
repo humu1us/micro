@@ -26,10 +26,6 @@ class CLI(ArgumentParser):
                           type=int,
                           required=False,
                           help="Set the Celery worker number")
-        self.add_argument("-l",
-                          "--log-from",
-                          required=False,
-                          help="Set the logger level")
         self.add_argument("-lp",
                           "--log-path",
                           required=False,
