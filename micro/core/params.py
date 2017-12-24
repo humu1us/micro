@@ -64,15 +64,15 @@ class Params:
 
     def log_from(self):
         return self.__priority_param(self.__args.log_from,
-                                     "MICRO_LOG_FROM",
+                                     "MICRO_CELERY_LOG_FROM",
                                      "log_from")
 
     def log_path(self):
         return self.__priority_param(self.__args.log_path,
-                                     "MICRO_LOG_PATH",
+                                     "MICRO_CELERY_LOG_PATH",
                                      "log_path")
 
     def pid_path(self):
         return self.__priority_param(self.__args.pid_path,
-                                     "MICRO_PID_PATH",
+                                     "MICRO_CELERY_PID_PATH",
                                      "pid_path")
