@@ -29,7 +29,7 @@ class TestConfig(TestCase):
                          "/path/to/plugins/folder"),
         self.assertEqual(self.config.key("broker_url"),
                          "test://user:pass@host:port//")
-        self.assertEqual(self.config.key("queue_name"), "queue name")
+        self.assertEqual(self.config.key("queue_name"), "queue_name")
         self.assertEqual(self.config.key("hostname"), "config_hostname")
         self.assertEqual(self.config.key("num_workers"), 10)
         self.assertEqual(self.config.key("log_from"), "ERROR")

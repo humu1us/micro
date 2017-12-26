@@ -1,7 +1,7 @@
 {
     "plugin_path": "/path/to/plugins/folder",
     "broker_url": "test://user:pass@host:port//",
-    "queue_name": "queue name",
+    "queue_name": "queue_name",
     "hostname": "config_hostname",
     "num_workers": 10,
     "log_from": "ERROR",
