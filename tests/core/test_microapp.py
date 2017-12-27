@@ -1,6 +1,6 @@
+import os
 from unittest import TestCase
 from micro.core.microapp import MicroApp
-import os
 
 
 class TestMicroApp(TestCase):
