@@ -145,3 +145,19 @@ $ micro --default-params
     "pid_path": "/var/run"
 }
 ```
+
+## Docker
+
+### Build
+To build the container first move to the branch/tag to use and then use the following command
+```docker build -t micro:0.0.1 .```
+
+At this moment the version 0.0.1 is the recommended version.
+
+### Run
+Run Micro as container is pretty easy and only needs to define `MICRO_BROKER_URL` to set the amqp host. All Micro environment variables are available with `-e` flag, for example:
+
+```
+docker run -e MICRO_BROKER_URL="amqp://guest:guest@my_host:5672//" -e MICRO_NUM_WORKERS=5 micro:0.0.1
+```
+The `MICRO_BROKER_URL` is the only mandatory environment variable to use
