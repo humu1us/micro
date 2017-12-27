@@ -57,9 +57,9 @@ class Params:
                                      "hostname")
 
     def num_workers(self):
-        return self.__priority_param(self.__args.num_workers,
-                                     "MICRO_NUM_WORKERS",
-                                     "num_workers")
+        return int(self.__priority_param(self.__args.num_workers,
+                                         "MICRO_NUM_WORKERS",
+                                         "num_workers"))
 
     def log_path(self):
         return self.__priority_param(self.__args.log_path,
