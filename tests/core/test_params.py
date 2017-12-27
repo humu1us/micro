@@ -61,6 +61,19 @@ class TestParams(TestCase):
         self.assertEqual(params.pid_path(),
                          params._Params__default["pid_path"])
 
+    def test_all_types(self):
+        try:
+            del os.environ["MICRO_CONFIG"]
+        except:
+            pass
+        params = Params()
+        self.assertEqual(type(params.broker_url()), str)
+        self.assertEqual(type(params.queue_name()), str)
+        self.assertEqual(type(params.hostname()), str)
+        self.assertEqual(type(params.num_workers()), int)
+        self.assertEqual(type(params.log_path()), str)
+        self.assertEqual(type(params.pid_path()), str)
+
     def __set_config_env(self):
         self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                                    os.path.pardir))
