@@ -43,7 +43,10 @@ class TestParams(TestCase):
         self.assertDictEqual(json.loads(output), params._Params__default)
 
     def test_all_params(self):
-        del os.environ["MICRO_CONFIG"]
+        try:
+            del os.environ["MICRO_CONFIG"]
+        except:
+            pass
         params = Params()
         self.assertEqual(params.broker_url(),
                          params._Params__default["broker_url"])
@@ -53,8 +56,6 @@ class TestParams(TestCase):
                          params._Params__default["hostname"])
         self.assertEqual(params.num_workers(),
                          params._Params__default["num_workers"])
-        self.assertEqual(params.log_from(),
-                         params._Params__default["log_from"])
         self.assertEqual(params.log_path(),
                          params._Params__default["log_path"])
         self.assertEqual(params.pid_path(),
