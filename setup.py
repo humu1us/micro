@@ -22,7 +22,7 @@ setup(
     description='Celery platform to create microservices',
     long_description=long_description,
 
-    url='',
+    url='https://github.com/humu1us/micro',
 
     author='Felipe Ortiz, Pablo Ahumada',
     author_email='fortizc@gmail.com, pablo.ahumadadiaz@gmail.com',
