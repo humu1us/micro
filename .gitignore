@@ -1,3 +1,4 @@
 *.pyc
 .eggs/*
 .coverage
+tests/micro.log
