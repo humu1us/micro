@@ -1,0 +1,10 @@
+{
+    "plugin_path": "/path/to/plugins/folder",
+    "broker_url": "test://user:pass@host:port//",
+    "queue_name": "queue_name",
+    "hostname": "config_hostname",
+    "num_workers": 10,
+    "log_from": "ERROR",
+    "log_path": "/path/to/logs",
+    "pid_path": "/path/to/pids"
+}

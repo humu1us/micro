@@ -28,7 +28,7 @@ class PluginManager:
 
         return pdesc.instance()
 
-    def list(self):
+    def plugins(self):
         result = {}
         names = self.__plugins.keys()
         for n in names:
@@ -56,9 +56,6 @@ class PluginManager:
         self.__load_plugins(self.__plugin_path)
 
     def __load_plugins(self, path):
-        if not path:
-            return
-
         for f in os.listdir(path):
             plugin_folder = os.path.join(path, f)
             if not os.path.isdir(plugin_folder):
@@ -76,6 +73,8 @@ class PluginManager:
 
     def __load_plugin_from_file(self, path):
         iface = os.path.join(path, self.__INTERFACE)
+        if not os.path.exists(iface):
+            return None
         spec = imp.spec_from_file_location("loaded_module", iface)
         module = imp.module_from_spec(spec)
         spec.loader.exec_module(module)

@@ -4,7 +4,7 @@ A platform to create microservices available through Celery API.
 ## Micro API
 Micro uses a very simple API to run, list and get information about plugins:
 
-* `list()`: list all available plugins.
+* `plugins()`: list all available plugins.
 * `info(plugin_name)`: show information about a specific plugin.
 * `help(plugin_name)`: show the plugin help.
 * `run(plugin_name, params)`: execute the given plugin.
@@ -16,7 +16,7 @@ To use this API you can use the [Micro-dev](https://github.com/humu1us/micro-dev
 ```python
 >>> from micro.api.endpoints import list, run
 >>>
->>> list.delay().wait()
+>>> plugins.delay().wait()
 {'Example plugin': 'A very simple example plugin'}
 >>>
 >>> run.delay("Example plugin", name="Micro").wait()
