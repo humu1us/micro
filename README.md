@@ -74,7 +74,7 @@ These arguments are the highest priority for Micro. So, these overwrite any othe
 ```
 $ micro -h
 usage: micro [-h] [-b BROKER_URL] [-q QUEUE_NAME] [-H HOSTNAME]
-             [-w NUM_WORKERS] [-l LOG_FROM] [-lp LOG_PATH] [-pp PID_PATH]
+             [-w NUM_WORKERS] [-lp LOG_PATH] [-pp PID_PATH]
              [--default-params]
 
 optional arguments:
@@ -87,8 +87,6 @@ optional arguments:
                         Set the hostname for the workers
   -w NUM_WORKERS, --num-workers NUM_WORKERS
                         Set the Celery worker number
-  -l LOG_FROM, --log-from LOG_FROM
-                        Set the logger level
   -lp LOG_PATH, --log-path LOG_PATH
                         Set the log file path
   -pp PID_PATH, --pid-path PID_PATH
@@ -100,18 +98,19 @@ optional arguments:
 The next priority in parameters for Micro are environment variables. The list of environment variables used are:
 
 ```
-MICRO_CONFIG      # config file location: /path/to/config/config.json
-MICRO_PLUGIN_PATH # path to plugin folder: /path/to/plugin/folder
-MICRO_BROKER_URL  # broker url: ampq://user:pass@host:port//
-MICRO_QUEUE_NAME  # queue name used
-MICRO_HOSTNAME    # workers hostname
-MICRO_NUM_WORKERS # number of workers to create (integer number)
-MICRO_LOG_FROM    # minimun log level to write: DEBUG, INFO, WARNING, ERROR, CRITICAL or FATAL
-MICRO_LOG_PATH    # path to log folder: /path/to/log/folder
-MICRO_PID_PATH    # path to pid folder: /path/to/pid/folder
+MICRO_CONFIG             # config file location: /path/to/config/config.json
+MICRO_PLUGIN_PATH        # path to plugin folder: /path/to/plugin/folder
+MICRO_LOG_PATH           # path to log folder: /path/to/plugin/folder
+MICRO_LOG_FROM           # minimun log level to write: DEBUG, INFO, WARNING, ERROR, CRITICAL or FATAL
+MICRO_BROKER_URL         # broker url: ampq://user:pass@host:port//
+MICRO_QUEUE_NAME         # queue name used
+MICRO_HOSTNAME           # workers hostname
+MICRO_NUM_WORKERS        # number of workers to create (integer number)
+MICRO_CELERY_LOG_PATH    # path to Celery log folder: /path/to/celery/log/folder
+MICRO_CELERY_PID_PATH    # path to Celery pid folder: /path/to/celery/pid/folder
 ```
 
-**IMPORTANT:** `MICRO_CONFIG` and `MICRO_PLUGIN_PATH` variables provide the only way to set config file and plugin folder paths.
+**IMPORTANT:** `MICRO_CONFIG`, `MICRO_PLUGIN_PATH`, `MICRO_LOG_PATH` and `MICRO_LOG_FROM` variables provide the only way to set config file, the plugin folder path, the logger file path and the logger level.
 
 ### Config file
 The lowest priority is the use of a JSON config file. The path to this config file must be set using `MICRO_CONFIG` environment variable.
@@ -124,7 +123,6 @@ Config file example:
     "queue_name": "",
     "hostname": "",
     "num_workers": ,
-    "log_from": "",
     "log_path": "/path/to/log/folder",
     "pid_path": "/path/to/pid/folder"
 }
@@ -143,7 +141,6 @@ $ micro --default-params
     "queue_name": "micro_queue",
     "hostname": "micro",
     "num_workers": 1,
-    "log_from": "INFO",
     "log_path": "/var/log",
     "pid_path": "/var/run"
 }

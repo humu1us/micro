@@ -10,7 +10,6 @@ class MicroApp(Celery):
         self.__namespace = "Micro"
         self.__queue = params.queue_name()
         self.__broker_url = params.broker_url()
-        self.__log_from = params.log_from()
         self.__log_path = params.log_path()
         self.__pid_path = params.pid_path()
         self.__hostname = params.hostname()
@@ -19,6 +18,7 @@ class MicroApp(Celery):
         super().__init__("Micro",
                          broker=self.__broker_url,
                          backend="rpc://")
+        self.conf.update(CELERYD_HIJACK_ROOT_LOGGER=False)
 
     def queue(self):
         return self.__queue
@@ -33,7 +33,6 @@ class MicroApp(Celery):
         args = ["celery",
                 "-A", "micro.api.endpoints",
                 "-Q", self.__queue,
-                "-l", self.__log_from,
                 "-b", self.__broker_url,
                 "--logfile=" + log_path,
                 "--pidfile=" + pid_path,

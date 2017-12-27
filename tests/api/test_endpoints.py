@@ -3,12 +3,18 @@ from unittest import TestCase
 
 
 class TestEndpoints(TestCase):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def setUp(self):
         self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                                    os.path.pardir))
         self.path = os.path.join(self.parent, "resources", "plugin")
         os.environ["MICRO_PLUGIN_PATH"] = self.path
+        os.environ["MICRO_LOG_PATH"] = self.parent
+        os.environ["MICRO_LOG_FROM"] = "INFO"
+
+    def tearDown(self):
+        del os.environ["MICRO_PLUGIN_PATH"]
+        del os.environ["MICRO_LOG_PATH"]
+        del os.environ["MICRO_LOG_FROM"]
 
     def test_plugins(self):
         from micro.api.endpoints import plugins

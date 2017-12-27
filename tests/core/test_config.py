@@ -1,25 +1,26 @@
-from os import path
-from os import environ
+import os
 from unittest import TestCase
 from micro.core.config import Config
 
 
 class TestConfig(TestCase):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.parent = path.abspath(path.join(path.dirname(__file__),
-                                             path.pardir))
-        self.file = path.join(self.parent, "resources", "test_config.json")
-        environ["MICRO_CONFIG"] = self.file
+    def setUp(self):
+        self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                   os.path.pardir))
+        self.file = os.path.join(self.parent, "resources", "test_config.json")
+        os.environ["MICRO_CONFIG"] = self.file
         self.config = Config()
 
+    def tearDown(self):
+        del os.environ["MICRO_CONFIG"]
+
     def test_open(self):
-        environ["MICRO_CONFIG"] = self.parent
+        os.environ["MICRO_CONFIG"] = self.parent
         with self.assertRaises(Exception) as context:
             Config()
         self.assertEqual(type(context.exception), IsADirectoryError)
 
-        environ["MICRO_CONFIG"] = path.join(self.parent, "wrong_name.json")
+        os.environ["MICRO_CONFIG"] = os.path.join(self.parent, "fakeconf.json")
         with self.assertRaises(Exception) as context:
             Config()
         self.assertEqual(type(context.exception), FileNotFoundError)
@@ -32,6 +33,5 @@ class TestConfig(TestCase):
         self.assertEqual(self.config.key("queue_name"), "queue_name")
         self.assertEqual(self.config.key("hostname"), "config_hostname")
         self.assertEqual(self.config.key("num_workers"), 10)
-        self.assertEqual(self.config.key("log_from"), "ERROR")
         self.assertEqual(self.config.key("log_path"), "/path/to/logs")
         self.assertEqual(self.config.key("pid_path"), "/path/to/pids")

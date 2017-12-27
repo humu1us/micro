@@ -1,1 +1,2 @@
 green>=2, <3
+testfixtures>=5, <6

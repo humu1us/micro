@@ -43,7 +43,10 @@ class TestParams(TestCase):
         self.assertDictEqual(json.loads(output), params._Params__default)
 
     def test_all_params(self):
-        del os.environ["MICRO_CONFIG"]
+        try:
+            del os.environ["MICRO_CONFIG"]
+        except:
+            pass
         params = Params()
         self.assertEqual(params.broker_url(),
                          params._Params__default["broker_url"])
@@ -53,12 +56,23 @@ class TestParams(TestCase):
                          params._Params__default["hostname"])
         self.assertEqual(params.num_workers(),
                          params._Params__default["num_workers"])
-        self.assertEqual(params.log_from(),
-                         params._Params__default["log_from"])
         self.assertEqual(params.log_path(),
                          params._Params__default["log_path"])
         self.assertEqual(params.pid_path(),
                          params._Params__default["pid_path"])
+
+    def test_all_types(self):
+        try:
+            del os.environ["MICRO_CONFIG"]
+        except:
+            pass
+        params = Params()
+        self.assertEqual(type(params.broker_url()), str)
+        self.assertEqual(type(params.queue_name()), str)
+        self.assertEqual(type(params.hostname()), str)
+        self.assertEqual(type(params.num_workers()), int)
+        self.assertEqual(type(params.log_path()), str)
+        self.assertEqual(type(params.pid_path()), str)
 
     def __set_config_env(self):
         self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),

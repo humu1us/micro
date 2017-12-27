@@ -12,7 +12,6 @@ class Params:
             "queue_name": "micro_queue",
             "hostname": "micro",
             "num_workers": 1,
-            "log_from": "INFO",
             "log_path": "/var/log",
             "pid_path": "/var/run"
         }
@@ -58,21 +57,16 @@ class Params:
                                      "hostname")
 
     def num_workers(self):
-        return self.__priority_param(self.__args.num_workers,
-                                     "MICRO_NUM_WORKERS",
-                                     "num_workers")
-
-    def log_from(self):
-        return self.__priority_param(self.__args.log_from,
-                                     "MICRO_LOG_FROM",
-                                     "log_from")
+        return int(self.__priority_param(self.__args.num_workers,
+                                         "MICRO_NUM_WORKERS",
+                                         "num_workers"))
 
     def log_path(self):
         return self.__priority_param(self.__args.log_path,
-                                     "MICRO_LOG_PATH",
+                                     "MICRO_CELERY_LOG_PATH",
                                      "log_path")
 
     def pid_path(self):
         return self.__priority_param(self.__args.pid_path,
-                                     "MICRO_PID_PATH",
+                                     "MICRO_CELERY_PID_PATH",
                                      "pid_path")
