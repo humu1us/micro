@@ -14,7 +14,7 @@ To use this API you can use the [Micro-dev](https://github.com/humu1us/micro-dev
 ### API example
 
 ```python
->>> from micro.api.endpoints import list, run
+>>> from micro.api.endpoints import plugins, run
 >>>
 >>> plugins.delay().wait()
 {'Example plugin': 'A very simple example plugin'}
@@ -64,7 +64,18 @@ my_plugindir/
 		inteface.py
 ```
 
-## Configuring Micro
+
+## Installation
+Using `pip`:
+
+```
+$ git clone git@github.com:humu1us/micro.git
+$ cd micro
+$ pip install .
+```
+
+
+## Configuration
 ### Parameters priority
 Micro can be configurated through CLI, environment variables, config file and/or default values (in that order).
 
@@ -151,8 +162,9 @@ $ micro --default-params
 ### Build
 
 To build the container first move to the branch/tag to use and then use the following command
+
 ```
-docker build -t micro:0.0.1 .
+$ docker build -t micro:0.0.1 .
 ```
 
 At this moment `0.0.1` is the recommended version.
@@ -161,6 +173,16 @@ At this moment `0.0.1` is the recommended version.
 Run Micro as container is pretty easy and only needs to define `MICRO_BROKER_URL` to set the amqp host. All Micro environment variables are available with `-e` flag, for example:
 
 ```
-docker run -e MICRO_BROKER_URL="amqp://guest:guest@my_host:5672//" -e MICRO_NUM_WORKERS=5 micro:0.0.1
+$ docker run -e MICRO_BROKER_URL="amqp://guest:guest@my_host:5672//" -e MICRO_NUM_WORKERS=5 micro:0.0.1
 ```
+
 The `MICRO_BROKER_URL` is the only mandatory environment variable to use
+
+
+## Tests
+
+Run all unit tests with:
+
+```
+$ python setup.py test
+```
