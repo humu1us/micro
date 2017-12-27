@@ -4,19 +4,20 @@ from micro.core.microapp import MicroApp
 
 
 class TestMicroApp(TestCase):
-    @classmethod
-    def setUpClass(cls):
+    def setUp(self):
         path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                             os.path.pardir))
 
         path = os.path.join(path, "resources", "test_config.json")
         os.environ["MICRO_CONFIG"] = path
 
+    def tearDown(self):
+        del os.environ["MICRO_CONFIG"]
+
     def test_load_args(self):
         expected = ['celery',
                     '-A', 'micro.api.endpoints',
                     '-Q', 'queue_name',
-                    '-l', 'ERROR',
                     '-b', 'test://user:pass@host:port//',
                     '--logfile=/path/to/logs/%N.log',
                     '--pidfile=/path/to/pids/%N.pid',
