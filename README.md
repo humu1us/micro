@@ -67,7 +67,7 @@ my_plugindir/
 
 ## Installation
 
-PyPi
+PyPi:
 
 ```
 $ pip install micro
@@ -82,7 +82,7 @@ $ cd micro
 $ pip install .
 ```
 
-or direct from repo
+or direct from repository:
 
 ```
 $ pip install git+ssh://git@github.com/humu1us/micro.git
@@ -173,27 +173,25 @@ $ micro --default-params
 ## Docker
 
 ### Pull
-To download from Docker Hub
+To download from Docker Hub:
 
 ```
-$ docker pull humu1us/micro:<version>
+$ docker pull humu1us/micro:<tag>
 ```
-To check the version please visit [Micro's repository on Docker Hub](https://hub.docker.com/r/humu1us/micro/)
+To check the available tags please visit [Micro's repository on Docker Hub](https://hub.docker.com/r/humu1us/micro/)
 
 ### Build
-To build the container first move to the branch/tag to use and then use the following command
+To build the container first move to the branch/tag to use and then use the following command:
 
 ```
-$ docker build -t micro:0.0.1 .
+$ docker build -t micro:<tag> .
 ```
-
-At this moment `0.0.1` is the recommended version.
 
 ### Run
 Run Micro as container is pretty easy and only needs to define `MICRO_BROKER_URL` to set the amqp host. All Micro environment variables are available with `-e` flag, for example:
 
 ```
-$ docker run -e MICRO_BROKER_URL="amqp://guest:guest@my_host:5672//" -e MICRO_NUM_WORKERS=5 micro:0.0.1
+$ docker run -e MICRO_BROKER_URL="amqp://guest:guest@my_host:5672//" -e MICRO_NUM_WORKERS=5 micro:<tag>
 ```
 
 The `MICRO_BROKER_URL` is the only mandatory environment variable to use
