@@ -30,14 +30,16 @@ setup(
     license='MIT',
 
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
-        'Topic :: Utilities',
+        'Topic :: Software Development',
+        'Topic :: System',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
 
-    keywords='Microservices celery',
+    keywords='microservices celery',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     install_requires=get_requirements('default.txt'),
     setup_requires=get_requirements('test.txt'),
