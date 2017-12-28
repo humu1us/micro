@@ -66,14 +66,16 @@ my_plugindir/
 
 
 ## Installation
-Using `pip`:
-
+Development version:
 ```
 $ git clone git@github.com:humu1us/micro.git
 $ cd micro
 $ pip install .
 ```
-
+or direct from repo 
+```
+$ pip install git+ssh://git@github.com/humu1us/micro.git
+```
 
 ## Configuration
 ### Parameters priority
