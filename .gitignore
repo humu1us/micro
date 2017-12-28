@@ -2,3 +2,6 @@
 .eggs/*
 .coverage
 tests/micro.log
+Micro.egg-info/
+dist/
+build/

@@ -17,12 +17,12 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 setup(
     name='Micro',
 
-    version='0.0.1',
+    version='1.0.0',
 
     description='Celery platform to create microservices',
     long_description=long_description,
 
-    url='',
+    url='https://github.com/humu1us/micro',
 
     author='Felipe Ortiz, Pablo Ahumada',
     author_email='fortizc@gmail.com, pablo.ahumadadiaz@gmail.com',
@@ -30,14 +30,16 @@ setup(
     license='MIT',
 
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
-        'Topic :: Utilities',
+        'Topic :: Software Development',
+        'Topic :: System',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
 
-    keywords='Microservices celery',
+    keywords='microservices celery',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     install_requires=get_requirements('default.txt'),
     setup_requires=get_requirements('test.txt'),
