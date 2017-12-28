@@ -66,13 +66,24 @@ my_plugindir/
 
 
 ## Installation
+
+PyPi
+
+```
+$ pip install micro
+```
+
+
 Development version:
+
 ```
 $ git clone git@github.com:humu1us/micro.git
 $ cd micro
 $ pip install .
 ```
-or direct from repo 
+
+or direct from repo
+
 ```
 $ pip install git+ssh://git@github.com/humu1us/micro.git
 ```
@@ -161,8 +172,15 @@ $ micro --default-params
 
 ## Docker
 
-### Build
+### Pull
+To download from Docker Hub
 
+```
+$ docker pull humu1us/micro:<version>
+```
+To check the version please visit [Micro's repository on Docker Hub](https://hub.docker.com/r/humu1us/micro/)
+
+### Build
 To build the container first move to the branch/tag to use and then use the following command
 
 ```
