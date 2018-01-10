@@ -1,6 +1,8 @@
 Micro
 =====
 
+|travis|
+
 A platform to create microservices available through Celery API.
 
 Micro API
@@ -250,3 +252,5 @@ Run all unit tests with:
 ::
 
     $ python setup.py test
+
+.. |travis| image:: https://img.shields.io/travis/humu1us/micro.svg?style=flat-square :target: https://travis-ci.org/humu1us/micro
