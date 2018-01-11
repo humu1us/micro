@@ -45,7 +45,7 @@ class TestParams(TestCase):
     def test_all_params(self):
         try:
             del os.environ["MICRO_CONFIG"]
-        except:
+        except KeyError:
             pass
         params = Params()
         self.assertEqual(params.broker_url(),
@@ -64,7 +64,7 @@ class TestParams(TestCase):
     def test_all_types(self):
         try:
             del os.environ["MICRO_CONFIG"]
-        except:
+        except KeyError:
             pass
         params = Params()
         self.assertEqual(type(params.broker_url()), str)
