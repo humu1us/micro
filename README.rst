@@ -253,7 +253,9 @@ Run all unit tests with:
 
     $ python setup.py test
 
-.. |travis| image:: https://img.shields.io/travis/humu1us/micro.svg?style=flat-square :target: https://travis-ci.org/humu1us/micro
-.. |coverage| image:: https://coveralls.io/repos/github/humu1us/micro/badge.svg
-:target: https://coveralls.io/github/humu1us/micro
-.. |pypi| image:: https://img.shields.io/pypi/v/Micro.svg?style=flat-square :target: https://pypi.python.org/pypi/Micro/
+.. |travis| image:: https://img.shields.io/travis/humu1us/micro.svg?style=flat-square
+   :target: https://travis-ci.org/humu1us/micro
+.. |coverage| image:: https://img.shields.io/coveralls/humu1us/micro.svg?style=flat-square
+   :target: https://coveralls.io/github/humu1us/micro
+.. |pypi| image:: https://img.shields.io/pypi/v/Micro.svg?style=flat-square
+   :target: https://pypi.python.org/pypi/Micro/
