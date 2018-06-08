@@ -11,4 +11,4 @@ ENV MICRO_PID_PATH=/var/run/micro
 
 RUN pip install micro
 
-CMD python -m micro && tail -f /dev/null
+CMD micro && tail -f /dev/null
