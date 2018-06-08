@@ -1,4 +1,5 @@
 import os
+import sys
 import importlib.util as imp
 from .pluginbase import PluginBase
 from ..core.logger import log
@@ -87,6 +88,8 @@ class PluginManager:
         iface = os.path.join(path, self.__INTERFACE)
         if not os.path.exists(iface):
             return None
+
+        sys.path.append(path)
         spec = imp.spec_from_file_location("loaded_module", iface)
         module = imp.module_from_spec(spec)
         spec.loader.exec_module(module)

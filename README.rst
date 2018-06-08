@@ -77,8 +77,17 @@ The plugin directory should look like this:
     my_plugindir/
         example-plugin/
             interface.py
+            exmple_plugin_core/
+                libs...
         other-plugin/
             inteface.py
+            other_plugin_core/
+                libs...
+
+
+**IMPORTANT:** All the plugins must provide its own libraries inside of its own
+namespace in order to avoid overwritting files. The general recomendation is to
+use a base directory with the same name of the plugin as the example above shows
 
 Installation
 ------------
