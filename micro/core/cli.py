@@ -10,6 +10,14 @@ class CLI(ArgumentParser):
 
     def __required_args(self):
         self.req = self.add_argument_group("required arguments")
+        self.req.add_argument("-c",
+                              "--config-file",
+                              required=False,
+                              help="path to the config file")
+        self.req.add_argument("-p",
+                              "--plugins-path",
+                              required=False,
+                              help="path to the plugins folder")
         self.req.add_argument("-b",
                               "--broker-url",
                               required=False,
