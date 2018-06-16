@@ -38,6 +38,11 @@ class CLI(ArgumentParser):
                               type=int,
                               required=False,
                               help="set the Celery worker number")
+        msg = "log level: DEBUG, INFO, WARNING, ERROR, CRITICAL or FATAL"
+        self.opt.add_argument("-ll",
+                              "--celery-log-level",
+                              required=False,
+                              help=msg)
         self.opt.add_argument("-lp",
                               "--celery-log-path",
                               required=False,
@@ -50,6 +55,10 @@ class CLI(ArgumentParser):
                               default=False,
                               action="store_true",
                               help="show default parameters")
+        self.opt.add_argument("--version",
+                              default=False,
+                              action="store_true",
+                              help="show Micro version")
         self.opt.add_argument("-h",
                               "--help",
                               action="help",
