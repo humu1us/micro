@@ -4,17 +4,20 @@ import json
 from .cli import CLI
 from .config import Config
 
+DEFAULT = {
+    "plugins_path": "",
+    "broker_url": "",
+    "queue_name": "",
+    "hostname": "micro",
+    "num_workers": 1,
+    "celery_log_level": "INFO",
+    "celery_log_path": "/var/log",
+    "celery_pid_path": "/var/run"
+}
+
 
 class Params:
     def __init__(self):
-        self.__default = {
-            "broker_url": "",
-            "queue_name": "micro_queue",
-            "hostname": "micro",
-            "num_workers": 1,
-            "log_path": "/var/log",
-            "pid_path": "/var/run"
-        }
         self.__cli = CLI()
         self.__args = self.__cli.parse_args()
         self.__check_default()
@@ -22,11 +25,8 @@ class Params:
 
     def __check_default(self):
         if self.__args.default_params:
-            self.__print_default()
+            print(json.dumps(DEFAULT, indent=4))
             sys.exit(0)
-
-    def __print_default(self):
-        print(json.dumps(self.__default, indent=4))
 
     def __priority_param(self, cli_param, env_var_name, config_key):
         if cli_param:
