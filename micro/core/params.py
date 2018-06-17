@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import pkg_resources
 from .cli import CLI
 from .config import Config
 
@@ -21,11 +22,17 @@ class Params:
         self.__cli = CLI()
         self.__args = self.__cli.parse_args()
         self.__check_default()
+        self.__check_version()
         self.__config = Config()
 
     def __check_default(self):
         if self.__args.default_params:
             print(json.dumps(DEFAULT, indent=4))
+            sys.exit(0)
+
+    def __check_version(self):
+        if self.__args.version:
+            print("Micro", pkg_resources.require("Micro")[0].version)
             sys.exit(0)
 
     def __priority_param(self, cli_param, env_var_name, config_key):
