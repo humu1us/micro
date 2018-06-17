@@ -10,10 +10,6 @@ class CLI(ArgumentParser):
 
     def __required_args(self):
         self.req = self.add_argument_group("required arguments")
-        self.req.add_argument("-c",
-                              "--config-file",
-                              required=False,
-                              help="path to the config file")
         self.req.add_argument("-p",
                               "--plugins-path",
                               required=False,
@@ -29,6 +25,10 @@ class CLI(ArgumentParser):
 
     def __optional_args(self):
         self.opt = self.add_argument_group("optional arguments")
+        self.opt.add_argument("-c",
+                              "--config-file",
+                              required=False,
+                              help="path to the config file")
         self.opt.add_argument("-H",
                               "--hostname",
                               required=False,
