@@ -23,7 +23,7 @@ class Params:
         self.__args = self.__cli.parse_args()
         self.__check_default()
         self.__check_version()
-        self.__config = Config()
+        self.__config = self.__get_config()
 
     def __check_default(self):
         if self.__args.default_params:
@@ -34,6 +34,17 @@ class Params:
         if self.__args.version:
             print("Micro", pkg_resources.require("Micro")[0].version)
             sys.exit(0)
+
+    def __get_config(self):
+        path = self.__args.config_file
+        if path:
+            return Config(path)
+
+        path = os.environ.get("MICRO_CONFIG")
+        if path:
+            return Config(path)
+
+        return None
 
     def __priority_param(self, cli_param, env_var_name, config_key):
         if cli_param:
