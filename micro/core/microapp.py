@@ -1,19 +1,17 @@
 import os
 from celery import Celery
-from .params import Params
 
 
 class MicroApp(Celery):
-    def __init__(self):
-        params = Params()
+    def __init__(self, broker, queue, hostname, workers, log_path, pid_path):
 
         self.__namespace = "Micro"
-        self.__queue = params.queue_name()
-        self.__broker_url = params.broker_url()
-        self.__log_path = params.log_path()
-        self.__pid_path = params.pid_path()
-        self.__hostname = params.hostname()
-        self.__workers = params.num_workers()
+        self.__broker_url = broker
+        self.__queue = queue
+        self.__hostname = hostname
+        self.__workers = workers
+        self.__log_path = log_path
+        self.__pid_path = pid_path
 
         super().__init__("Micro",
                          broker=self.__broker_url,
