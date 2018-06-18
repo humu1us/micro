@@ -26,6 +26,7 @@ class Params:
         self.__check_default()
         self.__check_version()
         self.__config = self.__get_config()
+        self.__check_required()
         self.__set_log_env()
 
     def __check_default(self):
@@ -49,7 +50,18 @@ class Params:
 
         return Config(os.environ.get("MICRO_CONFIG"))
 
-        return None
+    def __check_required(self):
+        if not self.plugin_path():
+            self.__cli.print_help()
+            sys.exit(1)
+
+        if not self.broker_url():
+            self.__cli.print_help()
+            sys.exit(1)
+
+        if not self.queue_name():
+            self.__cli.print_help()
+            sys.exit(1)
 
     def __priority_param(self, cli_param, env_var_name, config_key):
         if cli_param:
