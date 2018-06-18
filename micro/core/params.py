@@ -101,12 +101,27 @@ class Params:
                                          "MICRO_NUM_WORKERS",
                                          "num_workers"))
 
+    def log_level(self):
+        return self.__priority_param(self.__args.log_level,
+                                     "MICRO_LOG_LEVEL",
+                                     "log_level")
+
     def log_path(self):
         return self.__priority_param(self.__args.log_path,
-                                     "MICRO_CELERY_LOG_PATH",
+                                     "MICRO_LOG_PATH",
                                      "log_path")
 
-    def pid_path(self):
-        return self.__priority_param(self.__args.pid_path,
+    def celery_log_level(self):
+        return self.__priority_param(self.__args.celery_log_level,
+                                     "MICRO_CELERY_LOG_LEVEL",
+                                     "celery_log_level")
+
+    def celery_log_path(self):
+        return self.__priority_param(self.__args.celery_log_path,
+                                     "MICRO_CELERY_LOG_PATH",
+                                     "celery_log_path")
+
+    def celery_pid_path(self):
+        return self.__priority_param(self.__args.celery_pid_path,
                                      "MICRO_CELERY_PID_PATH",
-                                     "pid_path")
+                                     "celery_pid_path")
