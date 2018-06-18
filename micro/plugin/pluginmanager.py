@@ -13,13 +13,13 @@ class PluginManager:
         self.__load()
 
     def __plugin_path(self):
-        plugin_path = os.environ.get("MICRO_PLUGIN_PATH")
+        plugin_path = os.environ.get("_MICRO_PLUGIN_PATH")
 
         if not plugin_path:
-            raise RuntimeError("MICRO_PLUGIN_PATH not set")
+            raise RuntimeError("plugins path not set")
 
         if not os.path.isdir(plugin_path):
-            raise RuntimeError("MICRO_PLUGIN_PATH no name a folder")
+            raise RuntimeError("plugins path no name a folder")
 
         return plugin_path
 

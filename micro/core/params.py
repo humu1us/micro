@@ -40,8 +40,9 @@ class Params:
             sys.exit(0)
 
     def __set_log_env(self):
-        os.environ["MICRO_LOG_PATH"] = self.log_path()
-        os.environ["MICRO_LOG_FROM"] = self.log_level()
+        os.environ["_MICRO_PLUGINS_PATH"] = self.plugins_path()
+        os.environ["_MICRO_LOG_PATH"] = self.log_path()
+        os.environ["_MICRO_LOG_FROM"] = self.log_level()
 
     def __get_config(self):
         path = self.__args.config_file
@@ -76,7 +77,7 @@ class Params:
 
         return DEFAULT[config_key]
 
-    def plugin_path(self):
+    def plugins_path(self):
         return self.__priority_param(self.__args.plugins_path,
                                      "MICRO_PLUGINS_PATH",
                                      "plugins_path")
