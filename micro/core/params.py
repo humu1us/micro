@@ -6,7 +6,7 @@ from .cli import CLI
 from .config import Config
 
 DEFAULT = {
-    "plugins_path": "",
+    "plugin_path": "",
     "broker_url": "",
     "queue_name": "",
     "hostname": "micro",
@@ -40,7 +40,7 @@ class Params:
             sys.exit(0)
 
     def __set_log_env(self):
-        os.environ["_MICRO_PLUGINS_PATH"] = self.plugins_path()
+        os.environ["_MICRO_PLUGIN_PATH"] = self.plugin_path()
         os.environ["_MICRO_LOG_PATH"] = self.log_path()
         os.environ["_MICRO_LOG_FROM"] = self.log_level()
 
@@ -77,10 +77,10 @@ class Params:
 
         return DEFAULT[config_key]
 
-    def plugins_path(self):
-        return self.__priority_param(self.__args.plugins_path,
-                                     "MICRO_PLUGINS_PATH",
-                                     "plugins_path")
+    def plugin_path(self):
+        return self.__priority_param(self.__args.plugin_path,
+                                     "MICRO_PLUGIN_PATH",
+                                     "plugin_path")
 
     def broker_url(self):
         return self.__priority_param(self.__args.broker_url,
