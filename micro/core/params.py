@@ -47,9 +47,7 @@ class Params:
         if path:
             return Config(path)
 
-        path = os.environ.get("MICRO_CONFIG")
-        if path:
-            return Config(path)
+        return Config(os.environ.get("MICRO_CONFIG"))
 
         return None
 
