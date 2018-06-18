@@ -26,6 +26,7 @@ class Params:
         self.__check_default()
         self.__check_version()
         self.__config = self.__get_config()
+        self.__set_log_env()
 
     def __check_default(self):
         if self.__args.default_params:
@@ -36,6 +37,10 @@ class Params:
         if self.__args.version:
             print("Micro", pkg_resources.require("Micro")[0].version)
             sys.exit(0)
+
+    def __set_log_env(self):
+        os.environ["MICRO_LOG_PATH"] = self.log_path()
+        os.environ["MICRO_LOG_FROM"] = self.log_level()
 
     def __get_config(self):
         path = self.__args.config_file
