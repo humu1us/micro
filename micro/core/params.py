@@ -11,9 +11,11 @@ DEFAULT = {
     "queue_name": "",
     "hostname": "micro",
     "num_workers": 1,
+    "log_level": "INFO",
+    "log_path": "/var/log/micro",
     "celery_log_level": "INFO",
-    "celery_log_path": "/var/log",
-    "celery_pid_path": "/var/run"
+    "celery_log_path": "/var/log/micro/celery",
+    "celery_pid_path": "/var/run/micro/celery"
 }
 
 
