@@ -64,6 +64,11 @@ class Params:
 
         return DEFAULT[config_key]
 
+    def plugin_path(self):
+        return self.__priority_param(self.__args.plugins_path,
+                                     "MICRO_PLUGINS_PATH",
+                                     "plugins_path")
+
     def broker_url(self):
         return self.__priority_param(self.__args.broker_url,
                                      "MICRO_BROKER_URL",
