@@ -40,14 +40,22 @@ class CLI(ArgumentParser):
                               help="set the Celery worker number")
         msg = "log level: DEBUG, INFO, WARNING, ERROR, CRITICAL or FATAL"
         self.opt.add_argument("-ll",
-                              "--celery-log-level",
+                              "--log-level",
                               required=False,
                               help=msg)
         self.opt.add_argument("-lp",
+                              "--log-path",
+                              required=False,
+                              help="log file path")
+        self.opt.add_argument("-cll",
+                              "--celery-log-level",
+                              required=False,
+                              help="Celery " + msg)
+        self.opt.add_argument("-clp",
                               "--celery-log-path",
                               required=False,
                               help="Celery log file path")
-        self.opt.add_argument("-pp",
+        self.opt.add_argument("-cpp",
                               "--celery-pid-path",
                               required=False,
                               help="Celery PIDs path")
