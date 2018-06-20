@@ -1,9 +1,11 @@
 import os
 import logging
 from .params import Params
+from ..core.utils import set_folder
 
 log_from = Params.log_level()
 log_path = Params.log_path()
+set_folder(log_path)
 
 log_level = logging.getLevelName(log_from)
 logging.getLogger("celery").setLevel(log_level)
