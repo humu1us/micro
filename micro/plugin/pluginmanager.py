@@ -14,12 +14,14 @@ class PluginManager:
         self.__load()
 
     def __plugin_path(self):
-        plugin_path = Params.plugin_path()
+        path = Params.plugin_path()
 
-        if not os.path.isdir(plugin_path):
-            raise RuntimeError("plugins path no name a folder")
+        if not os.path.isdir(path):
+            msg = "ERROR: plugins path no name a folder: {}".format(path)
+            sys.stderr.write(msg)
+            sys.exit(1)
 
-        return plugin_path
+        return path
 
     def instance(self, name):
         pdesc = self.__plugins.get(name)

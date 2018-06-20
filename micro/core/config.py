@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 
 
@@ -13,7 +14,8 @@ class Config:
 
     def __load(self, path):
         if not os.path.exists(path):
-            raise FileNotFoundError("ERROR: config file not found in {}".format(path))
+            sys.stderr.write("ERROR: config file not found: {}".format(path))
+            sys.exit(1)
 
         with open(path) as conf_file:
             conf_data = conf_file.read()
