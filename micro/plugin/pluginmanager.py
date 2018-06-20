@@ -3,6 +3,7 @@ import sys
 import importlib.util as imp
 from .pluginbase import PluginBase
 from ..core.logger import log
+from ..core.params import Params
 
 
 class PluginManager:
@@ -13,10 +14,7 @@ class PluginManager:
         self.__load()
 
     def __plugin_path(self):
-        plugin_path = os.environ.get("_MICRO_PLUGIN_PATH")
-
-        if not plugin_path:
-            raise RuntimeError("plugins path not set")
+        plugin_path = Params.plugin_path()
 
         if not os.path.isdir(plugin_path):
             raise RuntimeError("plugins path no name a folder")

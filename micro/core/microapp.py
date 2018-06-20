@@ -1,22 +1,23 @@
 import os
 from celery import Celery
+from .params import Params
 
 
 class MicroApp(Celery):
-    def __init__(self, broker, queue, hostname, workers, log_path, pid_path):
+    def __init__(self):
 
         self.__namespace = "Micro"
-        self.__broker_url = broker
-        self.__queue = queue
-        self.__hostname = hostname
-        self.__workers = workers
-        self.__log_path = log_path
-        self.__pid_path = pid_path
+        self.__broker_url = Params.broker_url()
+        self.__queue = Params.queue_name()
+        self.__hostname = Params.hostname()
+        self.__workers = Params.num_workers()
+        self.__log_path = Params.celery_log_path()
+        self.__pid_path = Params.celery_pid_path()
 
         super().__init__("Micro",
                          broker=self.__broker_url,
                          backend="rpc://")
-        self.conf.update(CELERYD_HIJACK_ROOT_LOGGER=False)
+        self.conf.update(worker_hijack_root_logger=False)
 
     def queue(self):
         return self.__queue
