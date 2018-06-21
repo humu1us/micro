@@ -1,5 +1,6 @@
 import os
 from unittest import TestCase
+from micro.core.params import Params
 from micro.core.microapp import MicroApp
 
 
@@ -10,6 +11,7 @@ class TestMicroApp(TestCase):
 
         path = os.path.join(path, "resources", "test_config.json")
         os.environ["MICRO_CONFIG"] = path
+        Params()
 
     def tearDown(self):
         del os.environ["MICRO_CONFIG"]
@@ -18,9 +20,9 @@ class TestMicroApp(TestCase):
         expected = ['celery',
                     '-A', 'micro.api.endpoints',
                     '-Q', 'queue_name',
-                    '-b', 'test://user:pass@host:port//',
-                    '--logfile=/path/to/logs/%N.log',
-                    '--pidfile=/path/to/pids/%N.pid',
+                    '-b', 'test://user:pass@host:port',
+                    '--logfile=/tmp/micro/celery/logs/%N.log',
+                    '--pidfile=/tmp/micro/celery/pids/%N.pid',
                     'multi', 'start',
                     'worker1@config_hostname',
                     'worker2@config_hostname',

@@ -1,40 +1,47 @@
 import os
 from unittest import TestCase
 from testfixtures import LogCapture
+from micro.core.params import Params
+from tests.utils.fakestdout import StdoutLock
 
 
 class TestPluginManager(TestCase):
     def setUp(self):
         self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                                    os.path.pardir))
-        os.environ["MICRO_LOG_PATH"] = self.parent
-        os.environ["MICRO_LOG_FROM"] = "INFO"
+        config = os.path.join(self.parent, "resources", "test_config.json")
+        os.environ["MICRO_BROKER_URL"] = "test"
+        os.environ["MICRO_QUEUE_NAME"] = "test"
+        os.environ["MICRO_CONFIG"] = config
 
     def tearDown(self):
         del os.environ["MICRO_PLUGIN_PATH"]
-        del os.environ["MICRO_LOG_PATH"]
-        del os.environ["MICRO_LOG_FROM"]
+        del os.environ["MICRO_BROKER_URL"]
+        del os.environ["MICRO_QUEUE_NAME"]
+        del os.environ["MICRO_CONFIG"]
 
     def test_contructor(self):
-        from micro.plugin.pluginmanager import PluginManager
-
-        with self.assertRaises(Exception) as context:
-            PluginManager()
-        self.assertEqual(type(context.exception), RuntimeError)
-
         os.environ["MICRO_PLUGIN_PATH"] = "this_is_not_a_path"
+        Params()
 
-        with self.assertRaises(Exception) as context:
-            PluginManager()
-        self.assertEqual(type(context.exception), RuntimeError)
+        with StdoutLock() as lock:
+            with self.assertRaises(SystemExit):
+                from micro.plugin.pluginmanager import PluginManager
+                PluginManager()
+
+        err = "ERROR: plugins path no name a folder: "
+        err += "this_is_not_a_path"
+        self.assertEqual(lock.stderr, err)
 
         os.environ["MICRO_PLUGIN_PATH"] = "/"
+        Params()
         pm = PluginManager()
         self.assertEqual(type(pm), PluginManager)
 
     def test_error_plugins(self):
         path = os.path.join(self.parent, "resources", "error_plugins")
         os.environ["MICRO_PLUGIN_PATH"] = path
+        Params()
         from micro.plugin.pluginmanager import PluginManager
 
         with LogCapture() as logs:
