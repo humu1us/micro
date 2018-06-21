@@ -13,7 +13,7 @@ class Config:
         return self.__conf.get(name)
 
     def __load(self, path):
-        if not os.path.exists(path):
+        if not os.path.exists(path) or os.path.isdir(path):
             sys.stderr.write("ERROR: config file not found: {}".format(path))
             sys.exit(1)
 
