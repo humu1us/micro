@@ -70,8 +70,12 @@ class Params:
 
     def __check_version(self):
         if self.__args.get("version"):
-            print("Micro", pkg_resources.require("Micro")[0].version)
-            sys.exit(0)
+            try:
+                print("Micro", pkg_resources.require("Micro")[0].version)
+                sys.exit(0)
+            except pkg_resources.DistributionNotFound:
+                sys.stderr.write("ERROR: Micro is not installed")
+                sys.exit(1)
 
     def __get_config(self):
         path = self.__args.get("config_file")
