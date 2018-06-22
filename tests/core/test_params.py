@@ -1,6 +1,7 @@
 import os
 import json
 from unittest import TestCase
+from micro.core.config import Config
 from micro.core.params import Params
 from micro.core.params import DEFAULT
 from tests.utils.fakestdout import StdoutLock
@@ -8,6 +9,11 @@ from tests.utils.fakestdout import StdoutLock
 
 class TestParams(TestCase):
     def setUp(self):
+        parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                              os.path.pardir))
+        self.config_file = os.path.join(parent,
+                                        "resources",
+                                        "test_config.json")
         self.env_plugin_path = "env_var_plugin_path"
         self.env_broker_url = "env_var_broker_url"
         self.env_queue_name = "env_var_queue_name"
@@ -23,10 +29,7 @@ class TestParams(TestCase):
     def test_priority(self):
         os.environ["MICRO_HOSTNAME"] = "env_var_hostname"
 
-        parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                              os.path.pardir))
-        config_file = os.path.join(parent, "resources", "test_config.json")
-        os.environ["MICRO_CONFIG"] = config_file
+        os.environ["MICRO_CONFIG"] = self.config_file
 
         params = Params()
         params._Params__args = vars(params._Params__cli.parse_args(
@@ -68,6 +71,61 @@ class TestParams(TestCase):
                 params._Params__check_version()
 
         self.assertEqual(lock.stdout.split(" ")[0], "Micro")
+
+    def test_required(self):
+        params = Params()
+        with StdoutLock() as lock:
+            with self.assertRaises(SystemExit):
+                params._Params__args = vars(params._Params__cli.parse_args(
+                    ["--help"]
+                ))
+        micro_help = lock.stdout
+
+        del os.environ["MICRO_QUEUE_NAME"]
+        del os.environ["_MICRO_QUEUE_NAME"]
+        with StdoutLock() as lock:
+            with self.assertRaises(SystemExit):
+                Params()
+
+        self.assertEqual(lock.stdout, micro_help)
+
+        del os.environ["MICRO_BROKER_URL"]
+        del os.environ["_MICRO_BROKER_URL"]
+        with StdoutLock() as lock:
+            with self.assertRaises(SystemExit):
+                Params()
+
+        self.assertEqual(lock.stdout, micro_help)
+
+        del os.environ["MICRO_PLUGIN_PATH"]
+        del os.environ["_MICRO_PLUGIN_PATH"]
+        with StdoutLock() as lock:
+            with self.assertRaises(SystemExit):
+                Params()
+
+        self.assertEqual(lock.stdout, micro_help)
+
+        os.environ["MICRO_PLUGIN_PATH"] = self.env_plugin_path
+        os.environ["MICRO_BROKER_URL"] = self.env_broker_url
+        os.environ["MICRO_QUEUE_NAME"] = self.env_queue_name
+
+    def test_get_config(self):
+        params = Params()
+        params._Params__args = vars(params._Params__cli.parse_args(
+            ["-c", self.config_file]
+        ))
+        fake_path = "/fake/path/to/config.json"
+        os.environ["MICRO_CONFIG"] = fake_path
+        config = params._Params__get_config()
+        self.assertTrue(isinstance(config, Config))
+
+        with StdoutLock() as lock:
+            with self.assertRaises(SystemExit):
+                Params()
+
+        msg = "ERROR: config file not found: "
+        msg += fake_path
+        self.assertEqual(lock.stderr, msg)
 
     def test_all_params(self):
         Params()
