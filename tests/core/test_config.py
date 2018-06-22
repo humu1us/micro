@@ -15,8 +15,7 @@ class TestConfig(TestCase):
             with self.assertRaises(SystemExit):
                 Config(self.parent)
 
-        err = "ERROR: config file not found: "
-        err += "/Users/pahumada/prog/humu1us/micro/tests"
+        err = "ERROR: config file not found: " + self.parent
         self.assertEqual(lock.stderr, err)
 
     def test_read_keys(self):
