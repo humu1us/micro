@@ -1,6 +1,7 @@
 import os
 import json
 from unittest import TestCase
+from micro import __version__
 from micro.core.config import Config
 from micro.core.params import Params
 from micro.core.params import DEFAULT
@@ -70,7 +71,7 @@ class TestParams(TestCase):
             with self.assertRaises(SystemExit):
                 params._Params__check_version()
 
-        # self.assertEqual(lock.stdout.split(" ")[0], "Micro")
+        self.assertEqual(lock.stdout.split(" ")[1], __version__)
 
     def test_required(self):
         params = Params()

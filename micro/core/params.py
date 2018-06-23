@@ -1,9 +1,9 @@
 import os
 import sys
 import json
-import pkg_resources
 from .cli import CLI
 from .config import Config
+from .. import __version__
 
 PLUGIN_PATH = 0
 BROKER_URL = 1
@@ -70,12 +70,10 @@ class Params:
 
     def __check_version(self):
         if self.__args.get("version"):
-            try:
-                print("Micro", pkg_resources.require("Micro")[0].version)
-                sys.exit(0)
-            except pkg_resources.DistributionNotFound:
-                sys.stderr.write("ERROR: Micro is not installed")
-                sys.exit(1)
+            here = os.path.abspath(__file__)
+            pkg_path = os.path.dirname(os.path.dirname(os.path.dirname(here)))
+            print("Micro", __version__, "from", pkg_path)
+            sys.exit(0)
 
     def __get_config(self):
         path = self.__args.get("config_file")
