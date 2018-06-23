@@ -14,8 +14,7 @@ class Config:
 
     def __load(self, path):
         if not os.path.exists(path) or os.path.isdir(path):
-            sys.stderr.write("ERROR: config file not found: {}".format(path))
-            sys.exit(1)
+            sys.exit("ERROR: config file not found: {}".format(path))
 
         with open(path) as conf_file:
             conf_data = conf_file.read()

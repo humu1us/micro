@@ -17,9 +17,7 @@ class PluginManager:
         path = Params.plugin_path()
 
         if not os.path.isdir(path):
-            msg = "ERROR: plugins path no name a folder: {}".format(path)
-            sys.stderr.write(msg)
-            sys.exit(1)
+            sys.exit("ERROR: plugins path no name a folder: {}".format(path))
 
         return path
 

@@ -120,13 +120,12 @@ class TestParams(TestCase):
         config = params._Params__get_config()
         self.assertTrue(isinstance(config, Config))
 
-        with StdoutLock() as lock:
-            with self.assertRaises(SystemExit):
-                Params()
+        with self.assertRaises(SystemExit) as se:
+            Params()
 
-        msg = "ERROR: config file not found: "
-        msg += fake_path
-        self.assertEqual(lock.stderr, msg)
+        err = "ERROR: config file not found: "
+        err += fake_path
+        self.assertEqual(se.exception.args[0], err)
 
     def test_all_params(self):
         Params()

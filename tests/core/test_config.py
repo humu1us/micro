@@ -1,7 +1,6 @@
 import os
 from unittest import TestCase
 from micro.core.config import Config
-from tests.utils.fakestdout import StdoutLock
 
 
 class TestConfig(TestCase):
@@ -11,12 +10,11 @@ class TestConfig(TestCase):
         self.file = os.path.join(self.parent, "resources", "test_config.json")
 
     def test_open(self):
-        with StdoutLock() as lock:
-            with self.assertRaises(SystemExit):
-                Config(self.parent)
+        with self.assertRaises(SystemExit) as se:
+            Config(self.parent)
 
         err = "ERROR: config file not found: " + self.parent
-        self.assertEqual(lock.stderr, err)
+        self.assertEqual(se.exception.args[0], err)
 
     def test_read_keys(self):
         conf = Config(self.file)

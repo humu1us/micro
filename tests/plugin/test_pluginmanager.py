@@ -2,7 +2,6 @@ import os
 from unittest import TestCase
 from testfixtures import LogCapture
 from micro.core.params import Params
-from tests.utils.fakestdout import StdoutLock
 
 
 class TestPluginManager(TestCase):
@@ -24,14 +23,13 @@ class TestPluginManager(TestCase):
         os.environ["MICRO_PLUGIN_PATH"] = "this_is_not_a_path"
         Params()
 
-        with StdoutLock() as lock:
-            with self.assertRaises(SystemExit):
-                from micro.plugin.pluginmanager import PluginManager
-                PluginManager()
+        with self.assertRaises(SystemExit) as se:
+            from micro.plugin.pluginmanager import PluginManager
+            PluginManager()
 
         err = "ERROR: plugins path no name a folder: "
         err += "this_is_not_a_path"
-        self.assertEqual(lock.stderr, err)
+        self.assertEqual(se.exception.args[0], err)
 
         os.environ["MICRO_PLUGIN_PATH"] = "/"
         Params()

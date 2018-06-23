@@ -106,16 +106,13 @@ class Params:
 
     def __check_required(self):
         if not Params.plugin_path():
-            self.__cli.print_help()
-            sys.exit(1)
+            sys.exit(self.__cli.print_help())
 
         if not Params.broker_url():
-            self.__cli.print_help()
-            sys.exit(1)
+            sys.exit(self.__cli.print_help())
 
         if not Params.queue_name():
-            self.__cli.print_help()
-            sys.exit(1)
+            sys.exit(self.__cli.print_help())
 
     @staticmethod
     def plugin_path():
