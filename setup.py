@@ -1,23 +1,40 @@
+import os
+import re
+import codecs
 from setuptools import setup, find_packages
-from codecs import open
-from os import path
 
-here = path.abspath(path.dirname(__file__))
+here = os.path.abspath(os.path.dirname(__file__))
+
+
+def read(*folders):
+    with codecs.open(os.path.join(here, *folders), encoding='utf-8') as f:
+        return f.read()
+
+
+def find_version(*file_paths):
+    version_file = read(*file_paths)
+    version_match = re.search(
+        r"^__version__ = ['\"]([^'\"]*)['\"]",
+        version_file,
+        re.M,
+    )
+    if version_match:
+        return version_match.group(1)
+
+    raise RuntimeError("ERROR: version not found")
 
 
 def get_requirements(file_name):
-    req_path = path.join(here + '/requirements', file_name)
-    with open(req_path, encoding='utf-8') as f:
-        return f.read().splitlines()
+    requires_file = read('requirements', file_name)
+    return requires_file.splitlines()
 
 
-with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
-    long_description = f.read()
+long_description = read('README.rst')
 
 setup(
     name='Micro',
 
-    version='1.0.2',
+    version=find_version('micro', '__init__.py'),
 
     description='Celery platform to create microservices',
     long_description=long_description,
