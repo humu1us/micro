@@ -1,5 +1,6 @@
 import os
 from unittest import TestCase
+from micro.core.params import Params
 
 
 class TestEndpoints(TestCase):
@@ -8,11 +9,16 @@ class TestEndpoints(TestCase):
                                                    os.path.pardir))
         self.path = os.path.join(self.parent, "resources", "plugin")
         os.environ["MICRO_PLUGIN_PATH"] = self.path
+        os.environ["MICRO_BROKER_URL"] = "broker_test"
+        os.environ["MICRO_QUEUE_NAME"] = "queue_test"
         os.environ["MICRO_LOG_PATH"] = self.parent
         os.environ["MICRO_LOG_FROM"] = "INFO"
+        Params()
 
     def tearDown(self):
         del os.environ["MICRO_PLUGIN_PATH"]
+        del os.environ["MICRO_BROKER_URL"]
+        del os.environ["MICRO_QUEUE_NAME"]
         del os.environ["MICRO_LOG_PATH"]
         del os.environ["MICRO_LOG_FROM"]
 

@@ -1,24 +1,25 @@
 import os
 from celery import Celery
 from .params import Params
+from ..core.utils import set_folder
 
 
 class MicroApp(Celery):
     def __init__(self):
-        params = Params()
 
         self.__namespace = "Micro"
-        self.__queue = params.queue_name()
-        self.__broker_url = params.broker_url()
-        self.__log_path = params.log_path()
-        self.__pid_path = params.pid_path()
-        self.__hostname = params.hostname()
-        self.__workers = params.num_workers()
+        self.__tasks = "micro.api.endpoints"
+        self.__broker_url = Params.broker_url()
+        self.__queue = Params.queue_name()
+        self.__hostname = Params.hostname()
+        self.__workers = Params.num_workers()
+        self.__log_path = Params.celery_log_path()
+        self.__pid_path = Params.celery_pid_path()
 
-        super().__init__("Micro",
+        super().__init__(self.__namespace,
                          broker=self.__broker_url,
                          backend="rpc://")
-        self.conf.update(CELERYD_HIJACK_ROOT_LOGGER=False)
+        self.conf.update(worker_hijack_root_logger=False)
 
     def queue(self):
         return self.__queue
@@ -29,9 +30,11 @@ class MicroApp(Celery):
     def __load_args(self):
         log_path = os.path.join(self.__log_path, "%N.log")
         pid_path = os.path.join(self.__pid_path, "%N.pid")
+        set_folder(log_path)
+        set_folder(pid_path)
 
         args = ["celery",
-                "-A", "micro.api.endpoints",
+                "-A", self.__tasks,
                 "-Q", self.__queue,
                 "-b", self.__broker_url,
                 "--logfile=" + log_path,

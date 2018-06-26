@@ -1,12 +1,11 @@
 import os
 import logging
+from .params import Params
+from ..core.utils import set_folder
 
-log_path = os.environ.get("MICRO_LOG_PATH")
-log_from = os.environ.get("MICRO_LOG_FROM")
-if not log_path:
-    raise RuntimeError("MICRO_LOG_PATH not set")
-if not log_from:
-    raise RuntimeError("MICRO_LOG_FROM not set")
+log_from = Params.log_level()
+log_path = Params.log_path()
+set_folder(log_path)
 
 log_level = logging.getLevelName(log_from)
 logging.getLogger("celery").setLevel(log_level)
