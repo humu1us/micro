@@ -1,11 +1,11 @@
+from .core.celeryapp import CeleryApp
 from .core.params import Params
-from .core.microapp import MicroApp
 
 
 def main():
     Params()
 
-    app = MicroApp()
+    app = CeleryApp()
     app.start_app()
 
 

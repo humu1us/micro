@@ -1,10 +1,10 @@
 import json
-from ..core.microapp import MicroApp
-from ..plugin.pluginmanager import PluginManager
+from ..core.celeryapp import CeleryApp
 from ..core.logger import log
+from ..plugin.pluginmanager import PluginManager
 
 
-app = MicroApp()
+app = CeleryApp()
 manager = PluginManager()
 
 

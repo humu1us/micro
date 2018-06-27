@@ -1,10 +1,10 @@
 import os
 from unittest import TestCase
 from micro.core.params import Params
-from micro.core.microapp import MicroApp
+from micro.core.celeryapp import CeleryApp
 
 
-class TestMicroApp(TestCase):
+class TestCeleryApp(TestCase):
     def setUp(self):
         path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                             os.path.pardir))
@@ -35,6 +35,6 @@ class TestMicroApp(TestCase):
                     'worker9@config_hostname',
                     'worker10@config_hostname']
 
-        app = MicroApp()
-        args = app._MicroApp__load_args()
+        app = CeleryApp()
+        args = app._CeleryApp__load_args()
         self.assertEqual(args, expected)
