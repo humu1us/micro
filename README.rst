@@ -262,7 +262,7 @@ Run all unit tests with:
 
     $ python setup.py test
 
-.. |travis| image:: https://img.shields.io/travis/humu1us/micro.svg?style=flat-square
+.. |travis| image:: https://img.shields.io/travis/humu1us/micro.svg?branch=master&style=flat-square
    :target: https://travis-ci.org/humu1us/micro
 .. |coverage| image:: https://img.shields.io/coveralls/humu1us/micro.svg?style=flat-square
    :target: https://coveralls.io/github/humu1us/micro
