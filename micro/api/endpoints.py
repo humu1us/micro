@@ -1,3 +1,4 @@
+import json
 from ..core.microapp import MicroApp
 from ..plugin.pluginmanager import PluginManager
 from ..core.logger import log
@@ -31,5 +32,10 @@ def run(plugin_name, **kwargs):
     plg = manager.instance(plugin_name)
     if not plg:
         return "Plugin not found"
-    result = plg.run(**kwargs)
+
+    try:
+        result = plg.run(**kwargs)
+    except TypeError as e:
+        return json.dumps({"error": str(e)})
+
     return result
