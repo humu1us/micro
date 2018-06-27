@@ -32,7 +32,7 @@ class PluginManager:
         result = {}
         names = self.__plugins.keys()
         for n in names:
-            result[n] = self.__plugins[n].short_desc
+            result[n] = self.__plugins[n].description
 
         return result
 
@@ -42,14 +42,14 @@ class PluginManager:
         if not plg:
             return None
 
-        return plg.long_desc
+        return plg.long_description
 
     def help(self, name):
         plg = self.__plugins.get(name)
 
         if not plg:
             return None
-        return plg.help_str
+        return plg.plugin_help
 
     def __load(self):
         log.info("Load plugins from: {}".format(self.__plugin_path))
