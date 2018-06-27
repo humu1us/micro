@@ -1,12 +1,12 @@
-from .core.celeryapp import CeleryApp
+from .core.microapp import MicroApp
 from .core.params import Params
 
 
 def main():
     Params()
 
-    app = CeleryApp()
-    app.start_app()
+    app = MicroApp()
+    app.start()
 
 
 if __name__ == "__main__":
