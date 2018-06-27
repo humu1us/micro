@@ -46,9 +46,19 @@ class PluginManager:
         plg = self.__plugins.get(name)
 
         if not plg:
-            return None
+            return json.dumps({"error": "plugin not found"})
 
-        return plg.long_description
+        plugin = {
+            "name": plg.name,
+            "version": plg.version,
+            "url": plg.url,
+            "author": plg.author,
+            "author_email": plg.author_email,
+            "description": plg.description,
+            "long_description": plg.long_description
+        }
+
+        return json.dumps(plugin)
 
     def help(self, name):
         plg = self.__plugins.get(name)
