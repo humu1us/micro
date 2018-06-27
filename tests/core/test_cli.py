@@ -31,7 +31,9 @@ class TestCLI(TestCase):
             "-clp", self.values[9],
             "-cpp", self.values[10],
             "--default-params",
-            "--version"
+            "--version",
+            "--celery",
+            "--api-rest"
         ])
 
     def test_types(self):
@@ -48,6 +50,8 @@ class TestCLI(TestCase):
         self.assertEqual(type(self.args.celery_pid_path), str)
         self.assertEqual(type(self.args.default_params), bool)
         self.assertEqual(type(self.args.version), bool)
+        self.assertEqual(type(self.args.celery), bool)
+        self.assertEqual(type(self.args.api_rest), bool)
 
     def test_arguments(self):
         self.assertEqual(self.args.plugin_path, self.values[0])
@@ -63,8 +67,12 @@ class TestCLI(TestCase):
         self.assertEqual(self.args.celery_pid_path, self.values[10])
         self.assertTrue(self.args.default_params)
         self.assertTrue(self.args.version)
+        self.assertTrue(self.args.celery)
+        self.assertTrue(self.args.api_rest)
 
     def test_defaul_params_arg(self):
         args = self.cli.parse_args(["-w", "3"])
         self.assertFalse(args.default_params)
         self.assertFalse(args.version)
+        self.assertFalse(args.celery)
+        self.assertFalse(args.api_rest)

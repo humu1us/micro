@@ -12,12 +12,16 @@ class TestPluginManager(TestCase):
         os.environ["MICRO_BROKER_URL"] = "test"
         os.environ["MICRO_QUEUE_NAME"] = "test"
         os.environ["MICRO_CONFIG"] = config
+        os.environ["MICRO_CELERY"] = "1"
+        os.environ["MICRO_API_REST"] = "1"
 
     def tearDown(self):
         del os.environ["MICRO_PLUGIN_PATH"]
         del os.environ["MICRO_BROKER_URL"]
         del os.environ["MICRO_QUEUE_NAME"]
         del os.environ["MICRO_CONFIG"]
+        del os.environ["MICRO_CELERY"]
+        del os.environ["MICRO_API_REST"]
 
     def test_contructor(self):
         os.environ["MICRO_PLUGIN_PATH"] = "this_is_not_a_path"

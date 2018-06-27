@@ -14,6 +14,7 @@ class TestEndpoints(TestCase):
         os.environ["MICRO_QUEUE_NAME"] = "queue_test"
         os.environ["MICRO_LOG_PATH"] = self.parent
         os.environ["MICRO_LOG_FROM"] = "INFO"
+        os.environ["MICRO_CELERY"] = "1"
         Params()
 
     def tearDown(self):
@@ -22,6 +23,7 @@ class TestEndpoints(TestCase):
         del os.environ["MICRO_QUEUE_NAME"]
         del os.environ["MICRO_LOG_PATH"]
         del os.environ["MICRO_LOG_FROM"]
+        del os.environ["MICRO_CELERY"]
 
     def test_plugins(self):
         from micro.api.endpoints import plugins

@@ -11,10 +11,12 @@ class TestCeleryApp(TestCase):
 
         path = os.path.join(path, "resources", "test_config.json")
         os.environ["MICRO_CONFIG"] = path
+        os.environ["MICRO_CELERY"] = "1"
         Params()
 
     def tearDown(self):
         del os.environ["MICRO_CONFIG"]
+        del os.environ["MICRO_CELERY"]
 
     def test_load_args(self):
         expected = ['celery',

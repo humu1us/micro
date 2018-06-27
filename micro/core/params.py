@@ -15,6 +15,8 @@ LOG_PATH = 6
 CELERY_LOG_LEVEL = 7
 CELERY_LOG_PATH = 8
 CELERY_PID_PATH = 9
+CELERY = 10
+API_REST = 11
 
 PARAMS = {
     PLUGIN_PATH: {"var": "plugin_path",
@@ -37,6 +39,10 @@ PARAMS = {
                       "env": "MICRO_CELERY_LOG_PATH"},
     CELERY_PID_PATH: {"var": "celery_pid_path",
                       "env": "MICRO_CELERY_PID_PATH"},
+    CELERY: {"var": "celery",
+             "env": "MICRO_CELERY"},
+    API_REST: {"var": "api_rest",
+               "env": "MICRO_API_REST"},
 }
 
 DEFAULT = {
@@ -93,7 +99,7 @@ class Params:
         if self.__config.key(config_key):
             return self.__config.key(config_key)
 
-        return DEFAULT[config_key]
+        return DEFAULT.get(config_key)
 
     def __set_all(self):
         for p in PARAMS:
@@ -113,6 +119,9 @@ class Params:
 
         if not Params.queue_name():
             sys.exit(self.__cli.print_help())
+
+        if not Params.celery() and not Params.api_rest():
+            sys.exit("neither Celery nor API Rest has been selected")
 
     @staticmethod
     def plugin_path():
@@ -153,3 +162,11 @@ class Params:
     @staticmethod
     def celery_pid_path():
         return os.environ.get("_" + PARAMS[CELERY_PID_PATH]["env"])
+
+    @staticmethod
+    def celery():
+        return os.environ.get("_" + PARAMS[CELERY]["env"])
+
+    @staticmethod
+    def api_rest():
+        return os.environ.get("_" + PARAMS[API_REST]["env"])

@@ -18,14 +18,20 @@ class TestParams(TestCase):
         self.env_plugin_path = "env_var_plugin_path"
         self.env_broker_url = "env_var_broker_url"
         self.env_queue_name = "env_var_queue_name"
+        self.env_celery = "1"
+        self.env_api_rest = "1"
         os.environ["MICRO_PLUGIN_PATH"] = self.env_plugin_path
         os.environ["MICRO_BROKER_URL"] = self.env_broker_url
         os.environ["MICRO_QUEUE_NAME"] = self.env_queue_name
+        os.environ["MICRO_CELERY"] = self.env_celery
+        os.environ["MICRO_API_REST"] = self.env_api_rest
 
     def tierDown(self):
         del os.environ["MICRO_PLUGIN_PATH"]
         del os.environ["MICRO_BROKER_URL"]
         del os.environ["MICRO_QUEUE_NAME"]
+        del os.environ["MICRO_CELERY"]
+        del os.environ["MICRO_API_REST"]
 
     def test_priority(self):
         os.environ["MICRO_HOSTNAME"] = "env_var_hostname"
@@ -90,6 +96,8 @@ class TestParams(TestCase):
 
         self.assertEqual(lock.stdout, micro_help)
 
+        os.environ["MICRO_QUEUE_NAME"] = self.env_queue_name
+        Params()
         del os.environ["MICRO_BROKER_URL"]
         del os.environ["_MICRO_BROKER_URL"]
         with StdoutLock() as lock:
@@ -98,6 +106,8 @@ class TestParams(TestCase):
 
         self.assertEqual(lock.stdout, micro_help)
 
+        os.environ["MICRO_BROKER_URL"] = self.env_broker_url
+        Params()
         del os.environ["MICRO_PLUGIN_PATH"]
         del os.environ["_MICRO_PLUGIN_PATH"]
         with StdoutLock() as lock:
@@ -107,8 +117,19 @@ class TestParams(TestCase):
         self.assertEqual(lock.stdout, micro_help)
 
         os.environ["MICRO_PLUGIN_PATH"] = self.env_plugin_path
-        os.environ["MICRO_BROKER_URL"] = self.env_broker_url
-        os.environ["MICRO_QUEUE_NAME"] = self.env_queue_name
+        Params()
+        del os.environ["MICRO_CELERY"]
+        del os.environ["_MICRO_CELERY"]
+        del os.environ["MICRO_API_REST"]
+        del os.environ["_MICRO_API_REST"]
+        with self.assertRaises(SystemExit) as mmg:
+            Params()
+
+        error = "neither Celery nor API Rest has been selected"
+        self.assertEqual(str(mmg.exception), error)
+
+        os.environ["MICRO_CELERY"] = self.env_celery
+        os.environ["MICRO_API_REST"] = self.env_api_rest
 
     def test_get_config(self):
         params = Params()
@@ -140,6 +161,8 @@ class TestParams(TestCase):
                          DEFAULT["celery_log_level"])
         self.assertEqual(Params.celery_log_path(), DEFAULT["celery_log_path"])
         self.assertEqual(Params.celery_pid_path(), DEFAULT["celery_pid_path"])
+        self.assertEqual(Params.celery(), self.env_celery)
+        self.assertEqual(Params.api_rest(), self.env_api_rest)
 
     def test_all_types(self):
         Params()
@@ -153,3 +176,5 @@ class TestParams(TestCase):
         self.assertEqual(type(Params.celery_log_level()), str)
         self.assertEqual(type(Params.celery_log_path()), str)
         self.assertEqual(type(Params.celery_pid_path()), str)
+        self.assertEqual(type(Params.celery()), str)
+        self.assertEqual(type(Params.api_rest()), str)
