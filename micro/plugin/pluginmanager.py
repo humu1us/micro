@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import importlib.util as imp
 from .pluginbase import PluginBase
 from ..core.logger import log
@@ -29,12 +30,17 @@ class PluginManager:
         return pdesc.instance()
 
     def plugins(self):
-        result = {}
+        result = []
         names = self.__plugins.keys()
         for n in names:
-            result[n] = self.__plugins[n].description
+            plugin = {
+                "name": n,
+                "version": self.__plugins[n].version,
+                "description": self.__plugins[n].description
+            }
+            result.append(plugin)
 
-        return result
+        return json.dumps(result)
 
     def info(self, name):
         plg = self.__plugins.get(name)
