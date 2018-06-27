@@ -1,4 +1,5 @@
 import os
+import json
 from unittest import TestCase
 from micro.core.params import Params
 
@@ -24,23 +25,43 @@ class TestEndpoints(TestCase):
 
     def test_plugins(self):
         from micro.api.endpoints import plugins
-        self.assertEqual(plugins(),
-                         {"Example Plugin": "A very simple example plugin"})
+        resp = [{
+            "name": "Example Plugin",
+            "version": None,
+            "description": "A very simple example plugin"
+        }]
+        self.assertEqual(plugins(), json.dumps(resp))
 
     def test_info(self):
         from micro.api.endpoints import info
-        resp = "This plugin is a very simple example, " + \
-               "for that reason, we don't have a long description"
-        self.assertEqual(info("Example Plugin"), resp)
+        long_description = "This plugin is a very simple example, " + \
+                           "for that reason, we don't have a long description"
+        resp = {
+            "name": "Example Plugin",
+            "version": None,
+            "url": None,
+            "author": "Jhon Doe",
+            "author_email": None,
+            "description": "A very simple example plugin",
+            "long_description": long_description
+        }
+        self.assertEqual(info("Example Plugin"), json.dumps(resp))
 
-        self.assertIsNone(info("Non-existent plugin"))
+        self.assertEqual(info("Non-existent plugin"),
+                         json.dumps({"error": "plugin not found"}))
 
     def test_help(self):
         from micro.api.endpoints import help
+        resp = {
+            "name": "Example Plugin",
+            "version": None,
+            "help": "Params: name type string; A name to greet"
+        }
         self.assertEqual(help("Example Plugin"),
-                         "Params: name type string; A name to greet")
+                         json.dumps(resp))
 
-        self.assertIsNone(help("Non-existent plugin"))
+        self.assertEqual(help("Non-existent plugin"),
+                         json.dumps({"error": "plugin not found"}))
 
     def test_run(self):
         from micro.api.endpoints import run
@@ -48,4 +69,8 @@ class TestEndpoints(TestCase):
                          "Hello World!!!")
 
         self.assertEqual(run("Non-existent plugin", name="World"),
-                         "Plugin not found")
+                         json.dumps({"error": "plugin not found"}))
+
+        error = "run() got an unexpected keyword argument \'wrong_arg\'"
+        self.assertEqual(run("Example Plugin", wrong_arg="World"),
+                         json.dumps({"error": error}))
