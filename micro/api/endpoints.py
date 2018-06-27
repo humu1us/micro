@@ -31,7 +31,7 @@ def run(plugin_name, **kwargs):
     log.info("Endpoint call: Micro.run(%s, %s)" % (plugin_name, kwargs))
     plg = manager.instance(plugin_name)
     if not plg:
-        return "Plugin not found"
+        return json.dumps({"error": "plugin not found"})
 
     try:
         result = plg.run(**kwargs)
