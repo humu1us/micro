@@ -1,5 +1,6 @@
 from multiprocessing import Process
 from .celeryapp import CeleryApp
+from .logger import Logger
 from .params import Params
 
 
@@ -10,13 +11,13 @@ def start_celery():
 
 class MicroApp():
     def __init__(self):
+        self.__log = Logger()
         self.__celery = Params.celery()
         self.__flask = Params.api_rest()
 
     def __start_celery(self):
         if not self.__celery:
-            # TODO: this print must be logged
-            print("CeleryApp not started")
+            self.__log.warning("CeleryApp not started")
             return
 
         proc = Process(target=start_celery)
@@ -24,8 +25,7 @@ class MicroApp():
 
     def __start_flask(self):
         if not self.__flask:
-            # TODO: this print must be logged
-            print("FlaskApp not started")
+            self.__log.warning("FlaskApp not started")
             return
 
         # TODO: implement FlaskAPP class

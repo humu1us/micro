@@ -1,11 +1,12 @@
 import json
 from ..core.celeryapp import CeleryApp
-from ..core.logger import log
+from ..core.logger import Logger
 from ..plugin.pluginmanager import PluginManager
 
 
 app = CeleryApp()
 manager = PluginManager()
+log = Logger()
 
 
 @app.task(name=app.function_name("plugins"), queue=app.queue())
