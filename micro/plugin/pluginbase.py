@@ -7,15 +7,21 @@ class PluginBase:
 
 class PluginDescription:
     def __init__(self,
+                 instance,
                  name,
-                 author,
-                 short_desc,
-                 long_desc,
-                 help_str,
-                 instance):
-        self.name = name
-        self.author = author
-        self.short_desc = short_desc
-        self.long_desc = long_desc
-        self.help_str = help_str
+                 version=None,
+                 url=None,
+                 author=None,
+                 author_email=None,
+                 description=None,
+                 long_description=None,
+                 plugin_help=None):
         self.instance = instance
+        self.name = name
+        self.version = version
+        self.url = url
+        self.author = author
+        self.author_email = author_email
+        self.description = description
+        self.long_description = long_description
+        self.plugin_help = plugin_help

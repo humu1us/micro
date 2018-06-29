@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import importlib.util as imp
 from .pluginbase import PluginBase
 from ..core.logger import log
@@ -29,27 +30,49 @@ class PluginManager:
         return pdesc.instance()
 
     def plugins(self):
-        result = {}
+        result = []
         names = self.__plugins.keys()
         for n in names:
-            result[n] = self.__plugins[n].short_desc
+            plugin = {
+                "name": n,
+                "version": self.__plugins[n].version,
+                "description": self.__plugins[n].description
+            }
+            result.append(plugin)
 
-        return result
+        return json.dumps(result)
 
     def info(self, name):
         plg = self.__plugins.get(name)
 
         if not plg:
-            return None
+            return json.dumps({"error": "plugin not found"})
 
-        return plg.long_desc
+        plugin = {
+            "name": plg.name,
+            "version": plg.version,
+            "url": plg.url,
+            "author": plg.author,
+            "author_email": plg.author_email,
+            "description": plg.description,
+            "long_description": plg.long_description
+        }
+
+        return json.dumps(plugin)
 
     def help(self, name):
         plg = self.__plugins.get(name)
 
         if not plg:
-            return None
-        return plg.help_str
+            return json.dumps({"error": "plugin not found"})
+
+        plugin = {
+            "name": plg.name,
+            "version": plg.version,
+            "help": plg.plugin_help
+        }
+
+        return json.dumps(plugin)
 
     def __load(self):
         log.info("Load plugins from: {}".format(self.__plugin_path))
