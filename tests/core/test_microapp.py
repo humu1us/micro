@@ -10,6 +10,10 @@ def fake_start_celery():
     print(os.getpid())
 
 
+def fake_start_gunicorn():
+    print(os.getpid())
+
+
 class TestMicroApp(TestCase):
     def setUp(self):
         self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
@@ -49,3 +53,12 @@ class TestMicroApp(TestCase):
         app._MicroApp__start_celery()
 
         microapp.start_celery = start_celery_aux
+
+    def test_start_gunicorn(self):
+        app = MicroApp()
+        start_gunicorn_aux = microapp.start_gunicorn
+        microapp.start_gunicorn = fake_start_gunicorn
+
+        app._MicroApp__start_gunicorn()
+
+        microapp.start_gunicorn = start_gunicorn_aux

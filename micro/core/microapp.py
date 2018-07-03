@@ -1,12 +1,17 @@
 from multiprocessing import Process
-from .celeryapp import CeleryApp
 from .logger import Logger
 from .params import Params
 
 
 def start_celery():
+    from .celeryapp import CeleryApp
     celery = CeleryApp()
     celery.start_app()
+
+
+def start_gunicorn():
+    from .gunicornapp import GunicornApp
+    GunicornApp().run()
 
 
 class MicroApp():
@@ -28,8 +33,8 @@ class MicroApp():
             self.__log.warning("GunicornApp not started")
             return
 
-        # TODO: implement FlaskAPP class
-        pass
+        proc = Process(target=start_gunicorn)
+        proc.start()
 
     def start(self):
         self.__start_celery()
