@@ -20,7 +20,7 @@ class TestCeleryApp(TestCase):
 
     def test_load_args(self):
         expected = ['celery',
-                    '-A', 'micro.api.endpoints',
+                    '-A', 'micro.api.celery',
                     '-Q', 'queue_name',
                     '-b', 'test://user:pass@host:port',
                     '--logfile=/tmp/micro/celery/logs/%N.log',

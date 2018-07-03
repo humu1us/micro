@@ -7,7 +7,7 @@ from ..core.utils import set_folder
 class CeleryApp(Celery):
     def __init__(self):
 
-        self.__tasks = "micro.api.endpoints"
+        self.__tasks = "micro.api.celery"
         self.__broker_url = Params.broker_url()
         self.__namespace = Params.namespace()
         self.__queue = Params.queue_name()
