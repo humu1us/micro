@@ -20,6 +20,7 @@ class TestMicroApp(TestCase):
         os.environ["MICRO_QUEUE_NAME"] = "queue_test"
         os.environ["MICRO_LOG_PATH"] = self.parent
         os.environ["MICRO_CELERY"] = "1"
+        os.environ["MICRO_GUNICORN"] = "1"
         Params()
 
     def tearDown(self):
@@ -28,15 +29,17 @@ class TestMicroApp(TestCase):
         del os.environ["MICRO_QUEUE_NAME"]
         del os.environ["MICRO_LOG_PATH"]
         del os.environ["MICRO_CELERY"]
+        del os.environ["MICRO_GUNICORN"]
 
     def test_nothing(self):
         del os.environ["_MICRO_CELERY"]
+        del os.environ["_MICRO_GUNICORN"]
         app = MicroApp()
         with LogCapture("Micro") as logs:
             app.start()
         no_celery = ("Micro", "WARNING", "CeleryApp not started")
-        no_flask = ("Micro", "WARNING", "FlaskApp not started")
-        logs.check(no_celery, no_flask)
+        no_gunicorn = ("Micro", "WARNING", "GunicornApp not started")
+        logs.check(no_celery, no_gunicorn)
 
     def test_start_celery(self):
         app = MicroApp()

@@ -29,7 +29,7 @@ class CLI(ArgumentParser):
                               default=False,
                               action="store_true",
                               help="plugins available through Celery")
-        self.opt.add_argument("--api-rest",
+        self.opt.add_argument("--gunicorn",
                               default=False,
                               action="store_true",
                               help="plugins available through API Rest")
@@ -58,6 +58,10 @@ class CLI(ArgumentParser):
                               type=int,
                               required=False,
                               help="set the Celery worker number")
+        self.opt.add_argument("-bi",
+                              "--bind",
+                              required=False,
+                              help="Set the Gunicorn socket bind, HOST:PORT")
         msg = "log level: DEBUG, INFO, WARNING, ERROR, CRITICAL or FATAL"
         self.opt.add_argument("-ll",
                               "--log-level",

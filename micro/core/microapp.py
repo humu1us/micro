@@ -13,7 +13,7 @@ class MicroApp():
     def __init__(self):
         self.__log = Logger()
         self.__celery = Params.celery()
-        self.__flask = Params.api_rest()
+        self.__gunicorn = Params.gunicorn()
 
     def __start_celery(self):
         if not self.__celery:
@@ -23,9 +23,9 @@ class MicroApp():
         proc = Process(target=start_celery)
         proc.start()
 
-    def __start_flask(self):
-        if not self.__flask:
-            self.__log.warning("FlaskApp not started")
+    def __start_gunicorn(self):
+        if not self.__gunicorn:
+            self.__log.warning("GunicornApp not started")
             return
 
         # TODO: implement FlaskAPP class
@@ -33,4 +33,4 @@ class MicroApp():
 
     def start(self):
         self.__start_celery()
-        self.__start_flask()
+        self.__start_gunicorn()

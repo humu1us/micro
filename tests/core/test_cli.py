@@ -15,7 +15,8 @@ class TestCLI(TestCase):
             "/path/to/logs",
             "INFO",
             "/path/to/celery/logs",
-            "/path/to/celery/pids"
+            "/path/to/celery/pids",
+            "localhost:5050"
         ]
         self.cli = CLI()
         self.args = self.cli.parse_args([
@@ -25,6 +26,7 @@ class TestCLI(TestCase):
             "-c", self.values[3],
             "-H", self.values[4],
             "-w", str(self.values[5]),
+            "-bi", self.values[11],
             "-ll", self.values[6],
             "-lp", self.values[7],
             "-cll", self.values[8],
@@ -33,7 +35,7 @@ class TestCLI(TestCase):
             "--default-params",
             "--version",
             "--celery",
-            "--api-rest"
+            "--gunicorn"
         ])
 
     def test_types(self):
@@ -43,6 +45,7 @@ class TestCLI(TestCase):
         self.assertEqual(type(self.args.config_file), str)
         self.assertEqual(type(self.args.hostname), str)
         self.assertEqual(type(self.args.num_workers), int)
+        self.assertEqual(type(self.args.bind), str)
         self.assertEqual(type(self.args.log_level), str)
         self.assertEqual(type(self.args.log_path), str)
         self.assertEqual(type(self.args.celery_log_level), str)
@@ -51,7 +54,7 @@ class TestCLI(TestCase):
         self.assertEqual(type(self.args.default_params), bool)
         self.assertEqual(type(self.args.version), bool)
         self.assertEqual(type(self.args.celery), bool)
-        self.assertEqual(type(self.args.api_rest), bool)
+        self.assertEqual(type(self.args.gunicorn), bool)
 
     def test_arguments(self):
         self.assertEqual(self.args.plugin_path, self.values[0])
@@ -60,6 +63,7 @@ class TestCLI(TestCase):
         self.assertEqual(self.args.config_file, self.values[3])
         self.assertEqual(self.args.hostname, self.values[4])
         self.assertEqual(self.args.num_workers, self.values[5])
+        self.assertEqual(self.args.bind, self.values[11])
         self.assertEqual(self.args.log_level, self.values[6])
         self.assertEqual(self.args.log_path, self.values[7])
         self.assertEqual(self.args.celery_log_level, self.values[8])
@@ -68,11 +72,11 @@ class TestCLI(TestCase):
         self.assertTrue(self.args.default_params)
         self.assertTrue(self.args.version)
         self.assertTrue(self.args.celery)
-        self.assertTrue(self.args.api_rest)
+        self.assertTrue(self.args.gunicorn)
 
     def test_defaul_params_arg(self):
         args = self.cli.parse_args(["-w", "3"])
         self.assertFalse(args.default_params)
         self.assertFalse(args.version)
         self.assertFalse(args.celery)
-        self.assertFalse(args.api_rest)
+        self.assertFalse(args.gunicorn)
