@@ -1,12 +1,12 @@
-from .core.params import Params
 from .core.microapp import MicroApp
+from .core.params import Params
 
 
 def main():
     Params()
 
     app = MicroApp()
-    app.start_app()
+    app.start()
 
 
 if __name__ == "__main__":

@@ -1,57 +1,40 @@
-import os
-from celery import Celery
+from multiprocessing import Process
+from .logger import Logger
 from .params import Params
-from ..core.utils import set_folder
 
 
-class MicroApp(Celery):
+def start_celery():
+    from .celeryapp import CeleryApp
+    CeleryApp().start_app()
+
+
+def start_gunicorn():
+    from .gunicornapp import GunicornApp
+    GunicornApp().run()
+
+
+class MicroApp():
     def __init__(self):
+        self.__log = Logger()
+        self.__celery = Params.celery()
+        self.__gunicorn = Params.gunicorn()
 
-        self.__namespace = "Micro"
-        self.__tasks = "micro.api.endpoints"
-        self.__broker_url = Params.broker_url()
-        self.__queue = Params.queue_name()
-        self.__hostname = Params.hostname()
-        self.__workers = Params.num_workers()
-        self.__log_path = Params.celery_log_path()
-        self.__pid_path = Params.celery_pid_path()
+    def __start_celery(self):
+        if not self.__celery:
+            self.__log.warning("CeleryApp not started")
+            return
 
-        super().__init__(self.__namespace,
-                         broker=self.__broker_url,
-                         backend="rpc://")
-        self.conf.update(worker_hijack_root_logger=False)
+        proc = Process(target=start_celery)
+        proc.start()
 
-    def queue(self):
-        return self.__queue
+    def __start_gunicorn(self):
+        if not self.__gunicorn:
+            self.__log.warning("GunicornApp not started")
+            return
 
-    def function_name(self, name):
-        return self.__namespace + "." + name
+        proc = Process(target=start_gunicorn)
+        proc.start()
 
-    def __load_args(self):
-        log_path = os.path.join(self.__log_path, "%N.log")
-        pid_path = os.path.join(self.__pid_path, "%N.pid")
-        set_folder(log_path)
-        set_folder(pid_path)
-
-        args = ["celery",
-                "-A", self.__tasks,
-                "-Q", self.__queue,
-                "-b", self.__broker_url,
-                "--logfile=" + log_path,
-                "--pidfile=" + pid_path,
-                "multi", "start"]
-        workers = self.__create_workers()
-        return args + workers
-
-    def __create_workers(self):
-        workers = []
-        worker_name = "worker{num}@{hostname}"
-
-        for i in range(self.__workers):
-            workers.append(worker_name.format(num=(i + 1),
-                                              hostname=self.__hostname))
-
-        return workers
-
-    def start_app(self):
-        self.start(self.__load_args())
+    def start(self):
+        self.__start_celery()
+        self.__start_gunicorn()

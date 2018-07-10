@@ -2,29 +2,31 @@ import os
 from unittest import TestCase
 from testfixtures import LogCapture
 from micro.core.params import Params
+from micro.plugin.pluginmanager import PluginManager
 
 
 class TestPluginManager(TestCase):
     def setUp(self):
         self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                                    os.path.pardir))
-        config = os.path.join(self.parent, "resources", "test_config.json")
-        os.environ["MICRO_BROKER_URL"] = "test"
-        os.environ["MICRO_QUEUE_NAME"] = "test"
-        os.environ["MICRO_CONFIG"] = config
+        self.path = os.path.join(self.parent, "resources", "plugin")
+        os.environ["MICRO_BROKER_URL"] = "broker_test"
+        os.environ["MICRO_QUEUE_NAME"] = "queue_test"
+        os.environ["MICRO_LOG_PATH"] = self.parent
+        os.environ["MICRO_CELERY"] = "1"
 
     def tearDown(self):
         del os.environ["MICRO_PLUGIN_PATH"]
         del os.environ["MICRO_BROKER_URL"]
         del os.environ["MICRO_QUEUE_NAME"]
-        del os.environ["MICRO_CONFIG"]
+        del os.environ["MICRO_LOG_PATH"]
+        del os.environ["MICRO_CELERY"]
 
     def test_contructor(self):
         os.environ["MICRO_PLUGIN_PATH"] = "this_is_not_a_path"
         Params()
 
         with self.assertRaises(SystemExit) as se:
-            from micro.plugin.pluginmanager import PluginManager
             PluginManager()
 
         err = "ERROR: plugins path no name a folder: "
@@ -40,25 +42,24 @@ class TestPluginManager(TestCase):
         path = os.path.join(self.parent, "resources", "error_plugins")
         os.environ["MICRO_PLUGIN_PATH"] = path
         Params()
-        from micro.plugin.pluginmanager import PluginManager
 
-        with LogCapture() as logs:
+        with LogCapture("Micro") as logs:
             PluginManager()
         logs.check(
-            ("root",
+            ("Micro",
              "INFO",
              "Load plugins from: " + path),
-            ("root",
+            ("Micro",
              "INFO",
              "Load plugins, checking: " + path + "/example_noname"),
-            ("root",
+            ("Micro",
              "WARNING",
              "Plugin " + path + "/example_noname " +
              "does not has name. Omitted"),
-            ("root",
+            ("Micro",
              "INFO",
              "Load plugins, checking: " + path + "/example_notype"),
-            ("root",
+            ("Micro",
              "WARNING",
              "Plugin " + path + "/example_notype " + "is not valid. Omitted")
         )

@@ -18,14 +18,20 @@ class TestParams(TestCase):
         self.env_plugin_path = "env_var_plugin_path"
         self.env_broker_url = "env_var_broker_url"
         self.env_queue_name = "env_var_queue_name"
+        self.env_celery = "1"
+        self.env_gunicorn = "1"
         os.environ["MICRO_PLUGIN_PATH"] = self.env_plugin_path
         os.environ["MICRO_BROKER_URL"] = self.env_broker_url
         os.environ["MICRO_QUEUE_NAME"] = self.env_queue_name
+        os.environ["MICRO_CELERY"] = self.env_celery
+        os.environ["MICRO_GUNICORN"] = self.env_gunicorn
 
     def tierDown(self):
         del os.environ["MICRO_PLUGIN_PATH"]
         del os.environ["MICRO_BROKER_URL"]
         del os.environ["MICRO_QUEUE_NAME"]
+        del os.environ["MICRO_CELERY"]
+        del os.environ["MICRO_GUNICORN"]
 
     def test_priority(self):
         os.environ["MICRO_HOSTNAME"] = "env_var_hostname"
@@ -90,6 +96,8 @@ class TestParams(TestCase):
 
         self.assertEqual(lock.stdout, micro_help)
 
+        os.environ["MICRO_QUEUE_NAME"] = self.env_queue_name
+        Params()
         del os.environ["MICRO_BROKER_URL"]
         del os.environ["_MICRO_BROKER_URL"]
         with StdoutLock() as lock:
@@ -98,6 +106,8 @@ class TestParams(TestCase):
 
         self.assertEqual(lock.stdout, micro_help)
 
+        os.environ["MICRO_BROKER_URL"] = self.env_broker_url
+        Params()
         del os.environ["MICRO_PLUGIN_PATH"]
         del os.environ["_MICRO_PLUGIN_PATH"]
         with StdoutLock() as lock:
@@ -107,8 +117,19 @@ class TestParams(TestCase):
         self.assertEqual(lock.stdout, micro_help)
 
         os.environ["MICRO_PLUGIN_PATH"] = self.env_plugin_path
-        os.environ["MICRO_BROKER_URL"] = self.env_broker_url
-        os.environ["MICRO_QUEUE_NAME"] = self.env_queue_name
+        Params()
+        del os.environ["MICRO_CELERY"]
+        del os.environ["_MICRO_CELERY"]
+        del os.environ["MICRO_GUNICORN"]
+        del os.environ["_MICRO_GUNICORN"]
+        with self.assertRaises(SystemExit) as mmg:
+            Params()
+
+        error = "neither Celery nor Gunicorn have been selected"
+        self.assertEqual(str(mmg.exception), error)
+
+        os.environ["MICRO_CELERY"] = self.env_celery
+        os.environ["MICRO_GUNICORN"] = self.env_gunicorn
 
     def test_get_config(self):
         params = Params()
@@ -134,12 +155,15 @@ class TestParams(TestCase):
         self.assertEqual(Params.queue_name(), self.env_queue_name)
         self.assertEqual(Params.hostname(), DEFAULT["hostname"])
         self.assertEqual(Params.num_workers(), DEFAULT["num_workers"])
+        self.assertEqual(Params.bind(), DEFAULT["bind"])
         self.assertEqual(Params.log_level(), DEFAULT["log_level"])
         self.assertEqual(Params.log_path(), DEFAULT["log_path"])
         self.assertEqual(Params.celery_log_level(),
                          DEFAULT["celery_log_level"])
         self.assertEqual(Params.celery_log_path(), DEFAULT["celery_log_path"])
         self.assertEqual(Params.celery_pid_path(), DEFAULT["celery_pid_path"])
+        self.assertEqual(Params.celery(), self.env_celery)
+        self.assertEqual(Params.gunicorn(), self.env_gunicorn)
 
     def test_all_types(self):
         Params()
@@ -148,8 +172,11 @@ class TestParams(TestCase):
         self.assertEqual(type(Params.queue_name()), str)
         self.assertEqual(type(Params.hostname()), str)
         self.assertEqual(type(Params.num_workers()), int)
+        self.assertEqual(type(Params.bind()), str)
         self.assertEqual(type(Params.log_level()), str)
         self.assertEqual(type(Params.log_path()), str)
         self.assertEqual(type(Params.celery_log_level()), str)
         self.assertEqual(type(Params.celery_log_path()), str)
         self.assertEqual(type(Params.celery_pid_path()), str)
+        self.assertEqual(type(Params.celery()), str)
+        self.assertEqual(type(Params.gunicorn()), str)

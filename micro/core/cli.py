@@ -25,6 +25,26 @@ class CLI(ArgumentParser):
 
     def __optional_args(self):
         self.opt = self.add_argument_group("optional arguments")
+        self.opt.add_argument("--celery",
+                              default=False,
+                              action="store_true",
+                              help="plugins available through Celery")
+        self.opt.add_argument("--gunicorn",
+                              default=False,
+                              action="store_true",
+                              help="plugins available through API Rest")
+        self.opt.add_argument("--default-params",
+                              default=False,
+                              action="store_true",
+                              help="show default parameters")
+        self.opt.add_argument("--version",
+                              default=False,
+                              action="store_true",
+                              help="show Micro version")
+        self.opt.add_argument("-h",
+                              "--help",
+                              action="help",
+                              help="Show this help message")
         self.opt.add_argument("-c",
                               "--config-file",
                               required=False,
@@ -38,6 +58,10 @@ class CLI(ArgumentParser):
                               type=int,
                               required=False,
                               help="set the Celery worker number")
+        self.opt.add_argument("-bi",
+                              "--bind",
+                              required=False,
+                              help="Set the Gunicorn socket bind, HOST:PORT")
         msg = "log level: DEBUG, INFO, WARNING, ERROR, CRITICAL or FATAL"
         self.opt.add_argument("-ll",
                               "--log-level",
@@ -59,15 +83,3 @@ class CLI(ArgumentParser):
                               "--celery-pid-path",
                               required=False,
                               help="Celery PIDs path")
-        self.opt.add_argument("--default-params",
-                              default=False,
-                              action="store_true",
-                              help="show default parameters")
-        self.opt.add_argument("--version",
-                              default=False,
-                              action="store_true",
-                              help="show Micro version")
-        self.opt.add_argument("-h",
-                              "--help",
-                              action="help",
-                              help="Show this help message")
