@@ -5,8 +5,7 @@ from .params import Params
 
 def start_celery():
     from .celeryapp import CeleryApp
-    celery = CeleryApp()
-    celery.start_app()
+    CeleryApp().start_app()
 
 
 def start_gunicorn():
