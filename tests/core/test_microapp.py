@@ -1,40 +1,64 @@
 import os
 from unittest import TestCase
-from micro.core.params import Params
+from testfixtures import LogCapture
+from micro.core import microapp
 from micro.core.microapp import MicroApp
+from micro.core.params import Params
+
+
+def fake_start_celery():
+    print(os.getpid())
+
+
+def fake_start_gunicorn():
+    print(os.getpid())
 
 
 class TestMicroApp(TestCase):
     def setUp(self):
-        path = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                            os.path.pardir))
-
-        path = os.path.join(path, "resources", "test_config.json")
-        os.environ["MICRO_CONFIG"] = path
+        self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                   os.path.pardir))
+        self.path = os.path.join(self.parent, "resources", "plugin")
+        os.environ["MICRO_PLUGIN_PATH"] = self.path
+        os.environ["MICRO_BROKER_URL"] = "broker_test"
+        os.environ["MICRO_QUEUE_NAME"] = "queue_test"
+        os.environ["MICRO_LOG_PATH"] = self.parent
+        os.environ["MICRO_CELERY"] = "1"
+        os.environ["MICRO_GUNICORN"] = "1"
         Params()
 
     def tearDown(self):
-        del os.environ["MICRO_CONFIG"]
+        del os.environ["MICRO_PLUGIN_PATH"]
+        del os.environ["MICRO_BROKER_URL"]
+        del os.environ["MICRO_QUEUE_NAME"]
+        del os.environ["MICRO_LOG_PATH"]
+        del os.environ["MICRO_CELERY"]
+        del os.environ["MICRO_GUNICORN"]
 
-    def test_load_args(self):
-        expected = ['celery',
-                    '-A', 'micro.api.endpoints',
-                    '-Q', 'queue_name',
-                    '-b', 'test://user:pass@host:port',
-                    '--logfile=/tmp/micro/celery/logs/%N.log',
-                    '--pidfile=/tmp/micro/celery/pids/%N.pid',
-                    'multi', 'start',
-                    'worker1@config_hostname',
-                    'worker2@config_hostname',
-                    'worker3@config_hostname',
-                    'worker4@config_hostname',
-                    'worker5@config_hostname',
-                    'worker6@config_hostname',
-                    'worker7@config_hostname',
-                    'worker8@config_hostname',
-                    'worker9@config_hostname',
-                    'worker10@config_hostname']
-
+    def test_nothing(self):
+        del os.environ["_MICRO_CELERY"]
+        del os.environ["_MICRO_GUNICORN"]
         app = MicroApp()
-        args = app._MicroApp__load_args()
-        self.assertEqual(args, expected)
+        with LogCapture("Micro") as logs:
+            app.start()
+        no_celery = ("Micro", "WARNING", "CeleryApp not started")
+        no_gunicorn = ("Micro", "WARNING", "GunicornApp not started")
+        logs.check(no_celery, no_gunicorn)
+
+    def test_start_celery(self):
+        app = MicroApp()
+        start_celery_aux = microapp.start_celery
+        microapp.start_celery = fake_start_celery
+
+        app._MicroApp__start_celery()
+
+        microapp.start_celery = start_celery_aux
+
+    def test_start_gunicorn(self):
+        app = MicroApp()
+        start_gunicorn_aux = microapp.start_gunicorn
+        microapp.start_gunicorn = fake_start_gunicorn
+
+        app._MicroApp__start_gunicorn()
+
+        microapp.start_gunicorn = start_gunicorn_aux

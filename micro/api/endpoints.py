@@ -1,35 +1,35 @@
-from ..core.microapp import MicroApp
+import json
+from ..core.logger import Logger
 from ..plugin.pluginmanager import PluginManager
-from ..core.logger import log
 
-
-app = MicroApp()
+log = Logger()
 manager = PluginManager()
 
 
-@app.task(name=app.function_name("plugins"), queue=app.queue())
-def plugins():
+def _plugins():
     log.info("Endpoint call: Micro.plugins()")
     return manager.plugins()
 
 
-@app.task(name=app.function_name("info"), queue=app.queue())
-def info(name):
+def _info(name):
     log.info("Endpoint call: Micro.info(%s)" % name)
     return manager.info(name)
 
 
-@app.task(name=app.function_name("help"), queue=app.queue())
-def help(name):
+def _help(name):
     log.info("Endpoint call: Micro.help(%s)" % name)
     return manager.help(name)
 
 
-@app.task(name=app.function_name("run"), queue=app.queue())
-def run(plugin_name, **kwargs):
+def _run(plugin_name, **kwargs):
     log.info("Endpoint call: Micro.run(%s, %s)" % (plugin_name, kwargs))
     plg = manager.instance(plugin_name)
     if not plg:
-        return "Plugin not found"
-    result = plg.run(**kwargs)
+        return json.dumps({"error": "plugin not found"})
+
+    try:
+        result = plg.run(**kwargs)
+    except TypeError as e:
+        return json.dumps({"error": str(e)})
+
     return result

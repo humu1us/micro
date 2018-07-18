@@ -5,8 +5,21 @@ class CLI(ArgumentParser):
     def __init__(self):
         super().__init__(add_help=False)
         self.description = "Micro arguments:"
+        self.__services_args()
         self.__required_args()
         self.__optional_args()
+
+    def __services_args(self):
+        msg = "start services (choose at least one)"
+        self.srv = self.add_argument_group(msg)
+        self.srv.add_argument("--celery",
+                              default=False,
+                              action="store_true",
+                              help="plugins available through Celery")
+        self.srv.add_argument("--gunicorn",
+                              default=False,
+                              action="store_true",
+                              help="plugins available through API Rest")
 
     def __required_args(self):
         self.req = self.add_argument_group("required arguments")
@@ -14,14 +27,6 @@ class CLI(ArgumentParser):
                               "--plugin-path",
                               required=False,
                               help="path to the plugins folder")
-        self.req.add_argument("-b",
-                              "--broker-url",
-                              required=False,
-                              help="RabbitMQ URL")
-        self.req.add_argument("-q",
-                              "--queue-name",
-                              required=False,
-                              help="RabbitMQ queue name")
 
     def __optional_args(self):
         self.opt = self.add_argument_group("optional arguments")
@@ -29,6 +34,15 @@ class CLI(ArgumentParser):
                               "--config-file",
                               required=False,
                               help="path to the config file")
+        self.opt.add_argument("-b",
+                              "--broker-url",
+                              required=False,
+                              help="RabbitMQ URL")
+        self.opt.add_argument("-q",
+                              "--queue-name",
+                              required=False,
+                              help="RabbitMQ queue name")
+
         self.opt.add_argument("-H",
                               "--hostname",
                               required=False,
@@ -38,6 +52,10 @@ class CLI(ArgumentParser):
                               type=int,
                               required=False,
                               help="set the Celery worker number")
+        self.opt.add_argument("-bi",
+                              "--bind",
+                              required=False,
+                              help="Set the Gunicorn socket bind, HOST:PORT")
         msg = "log level: DEBUG, INFO, WARNING, ERROR, CRITICAL or FATAL"
         self.opt.add_argument("-ll",
                               "--log-level",
