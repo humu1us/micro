@@ -118,10 +118,10 @@ class Params:
         if not Params.plugin_path():
             sys.exit(self.__cli.print_help())
 
-        if not Params.broker_url():
+        if Params.celery() and not Params.broker_url():
             sys.exit(self.__cli.print_help())
 
-        if not Params.queue_name():
+        if Params.celery() and not Params.queue_name():
             sys.exit(self.__cli.print_help())
 
         if not Params.celery() and not Params.gunicorn():
