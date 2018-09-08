@@ -1,4 +1,7 @@
+import sys
 from flask import Flask
+from gunicorn import debug
+from gunicorn import util
 from gunicorn.app.base import BaseApplication
 from gunicorn.six import iteritems
 from ..api.apirest import endpoints
@@ -8,14 +11,13 @@ from .params import Params
 class GunicornApp(BaseApplication):
     def __init__(self):
         self.__namespace = Params.namespace()
-        self.__bind = Params.bind()
-        self.__num_workers = Params.num_workers()
         self.__app = Flask(self.__namespace)
         self.__app.register_blueprint(endpoints)
         self.__options = {
-            "bind": self.__bind,
-            "workers": self.__num_workers,
             "daemon": True,
+            "bind": Params.bind(),
+            "workers": Params.num_workers(),
+            "loglevel": Params.log_level()
         }
         super().__init__()
 
@@ -26,3 +28,21 @@ class GunicornApp(BaseApplication):
 
     def load(self):
         return self.__app
+
+    def run(self):
+        if self.cfg.check_config:
+            try:
+                self.load()
+            except Exception:
+                msg = "Error while loading the application"
+                sys.exit(msg)
+
+            sys.exit(0)
+
+        if self.cfg.spew:
+            debug.spew()
+
+        if self.cfg.daemon:
+            util.daemonize(self.cfg.enable_stdio_inheritance)
+
+        super().run()
