@@ -7,25 +7,21 @@ from ..core.utils import set_folder
 class CeleryApp(Celery):
     def __init__(self):
 
+        Params()
         self.__tasks = "micro.api.celery"
-        self.__broker_url = Params.broker_url()
         self.__namespace = Params.namespace()
-        self.__queue = Params.queue_name()
+        self.__queue = Params.task_queues()
         self.__hostname = Params.hostname()
-        self.__workers = Params.num_workers()
-        self.__log_path = Params.celery_log_path()
-        self.__pid_path = Params.celery_pid_path()
+        self.__workers = Params.workers()
+        self.__log_path = os.path.join(Params.log_folder_path(), "celery")
+        self.__pid_path = os.path.join(Params.pid_folder_path(), "celery")
+        self.__options = {
+            "worker_hijack_root_logger": False
+        }
+        self.__options.update(Params.config_celery())
 
-        super().__init__(self.__namespace,
-                         broker=self.__broker_url,
-                         backend="rpc://")
-        self.conf.update(worker_hijack_root_logger=False)
-
-    def queue(self):
-        return self.__queue
-
-    def function_name(self, name):
-        return self.__namespace + "." + name
+        super().__init__(self.__namespace)
+        self.config_from_object(self.__options)
 
     def __load_args(self):
         log_path = os.path.join(self.__log_path, "%N.log")
@@ -36,7 +32,6 @@ class CeleryApp(Celery):
         args = ["celery",
                 "-A", self.__tasks,
                 "-Q", self.__queue,
-                "-b", self.__broker_url,
                 "--logfile=" + log_path,
                 "--pidfile=" + pid_path,
                 "multi", "start"]
@@ -53,5 +48,13 @@ class CeleryApp(Celery):
 
         return workers
 
+    def queue(self):
+        return self.__queue
+
+    def function_name(self, name):
+        return self.__namespace + "." + name
+
     def start_app(self):
+        args = self.__load_args()
+        print(args)
         self.start(self.__load_args())
