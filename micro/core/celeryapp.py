@@ -55,6 +55,4 @@ class CeleryApp(Celery):
         return self.__namespace + "." + name
 
     def start_app(self):
-        args = self.__load_args()
-        print(args)
         self.start(self.__load_args())
