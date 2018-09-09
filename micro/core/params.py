@@ -1,184 +1,153 @@
+import inspect
+import json
 import os
 import sys
-import json
-from .cli import CLI
-from .config import Config
+from argparse import ArgumentParser
+from argparse import RawTextHelpFormatter
 from .. import __version__
+from . import setting
+from .config import Config
+from .setting import ConfigFile
+from .setting import CELERY
+from .setting import GUNICORN
+from .settingbase import SettingBase
 
-PLUGIN_PATH = 0
-BROKER_URL = 1
-QUEUE_NAME = 2
-HOSTNAME = 3
-NUM_WORKERS = 4
-LOG_LEVEL = 5
-LOG_PATH = 6
-CELERY_LOG_LEVEL = 7
-CELERY_LOG_PATH = 8
-CELERY_PID_PATH = 9
-CELERY = 10
-GUNICORN = 11
-BIND = 12
+CONF_CELERY = "MICRO_CONFIG_CELERY"
+CONF_GUNICORN = "MICRO_CONFIG_GUNICORN"
 
-PARAMS = {
-    PLUGIN_PATH: {"var": "plugin_path",
-                  "env": "MICRO_PLUGIN_PATH"},
-    BROKER_URL: {"var": "broker_url",
-                 "env": "MICRO_BROKER_URL"},
-    QUEUE_NAME: {"var": "queue_name",
-                 "env": "MICRO_QUEUE_NAME"},
-    HOSTNAME: {"var": "hostname",
-               "env": "MICRO_HOSTNAME"},
-    NUM_WORKERS: {"var": "num_workers",
-                  "env": "MICRO_NUM_WORKERS"},
-    LOG_LEVEL: {"var": "log_level",
-                "env": "MICRO_LOG_LEVEL"},
-    LOG_PATH: {"var": "log_path",
-               "env": "MICRO_LOG_PATH"},
-    CELERY_LOG_LEVEL: {"var": "celery_log_level",
-                       "env": "MICRO_CELERY_LOG_LEVEL"},
-    CELERY_LOG_PATH: {"var": "celery_log_path",
-                      "env": "MICRO_CELERY_LOG_PATH"},
-    CELERY_PID_PATH: {"var": "celery_pid_path",
-                      "env": "MICRO_CELERY_PID_PATH"},
-    CELERY: {"var": "celery",
-             "env": "MICRO_CELERY"},
-    GUNICORN: {"var": "gunicorn",
-               "env": "MICRO_GUNICORN"},
-    BIND: {"var": "bind",
-           "env": "MICRO_GUNICORN_BIND"},
-}
 
-DEFAULT = {
-    "plugin_path": "",
-    "broker_url": "",
-    "queue_name": "",
-    "hostname": "micro",
-    "num_workers": 1,
-    "bind": "0.0.0.0:8000",
-    "log_level": "INFO",
-    "log_path": "/var/log/micro",
-    "celery_log_level": "INFO",
-    "celery_log_path": "/var/log/micro/celery",
-    "celery_pid_path": "/var/run/micro/celery"
-}
+def add_static_method(cls, name, env, type):
+    def get_env():
+        return type(os.environ.get("_" + env))
+
+    staticmethod(setattr(cls, name, get_env))
 
 
 class Params:
-    def __init__(self):
-        self.__cli = CLI()
-        self.__args = vars(self.__cli.parse_args())
-        self.__check_default()
-        self.__check_version()
-        self.__config = self.__get_config()
-        self.__set_all()
-        self.__check_required()
+    def __init__(self, setall=False):
+        self.__get_settings()
+        self.__add_methods()
+        if setall:
+            self.__default = {}
+            self.__cli = ArgumentParser(add_help=False,
+                                        formatter_class=RawTextHelpFormatter)
+            self.__add_args()
+            self.__init_settings()
+            self.__args = vars(self.__cli.parse_args())
+            self.__check_default()
+            self.__get_config()
+
+    def __get_settings(self):
+        self.__settings = []
+        for name, obj in inspect.getmembers(setting):
+            if name == ConfigFile.__name__:
+                self.__config_setting = obj
+                continue
+
+            if inspect.isclass(obj) and obj.__base__ == SettingBase:
+                self.__settings.append(obj)
+
+    def __add_methods(self):
+        # this method is used to add 'staticmethod'
+        # to get the settings from the env vars set
+        methods = []
+        for s in self.__settings:
+            if s.configname:
+                continue
+
+            if s.name in methods:
+                msg = "There are two settings with the same name: %s" % s.name
+                sys.exit(msg)
+
+            methods.append(s.name)
+            add_static_method(Params, s.name, s.env, s.type)
+
+    def __add_args(self):
+        self.__cli.add_argument("-d",
+                                "--default-values",
+                                dest="default_values",
+                                action="store_true",
+                                help="show default values and exit")
+
+        self.__cli.add_argument("-h",
+                                "--help",
+                                action="help",
+                                help="show this help message and exit")
+
+        version = "%(prog)s (version " + __version__ + ")"
+        self.__cli.add_argument("-v",
+                                "--version",
+                                action="version",
+                                version=version,
+                                help="show program's version and exit")
+
+    def __init_settings(self):
+        self.__config_setting = self.__config_setting(self.__cli)
+
+        for i in range(len(self.__settings)):
+            self.__settings[i] = self.__settings[i](self.__cli, self.__default)
 
     def __check_default(self):
-        if self.__args.get("default_params"):
-            print(json.dumps(DEFAULT, indent=4))
-            sys.exit(0)
-
-    def __check_version(self):
-        if self.__args.get("version"):
-            here = os.path.abspath(__file__)
-            pkg_path = os.path.dirname(os.path.dirname(os.path.dirname(here)))
-            print("Micro", __version__, "from", pkg_path)
+        if self.__args.get("default_values"):
+            print(json.dumps(self.__default, indent=4))
             sys.exit(0)
 
     def __get_config(self):
-        path = self.__args.get("config_file")
-        if path:
-            return Config(path)
+        path = self.__args.get(self.__config_setting.name)
+        if not path:
+            path = os.environ.get(self.__config_setting.env)
 
-        return Config(os.environ.get("MICRO_CONFIG"))
+        path = self.__config_setting.validator(path)
+        self.__cfg = Config(path)
 
-    def __priority_param(self, cli_param, env_var_name, config_key):
-        if cli_param:
-            return cli_param
+    def __check_priority(self, setting):
+        cli = self.__args.get(setting.name)
+        if cli:
+            return cli
 
-        env_var = os.environ.get(env_var_name)
-        if env_var:
-            return env_var
+        if setting.type == bool and setting.env in os.environ:
+            return True
 
-        if self.__config.key(config_key):
-            return self.__config.key(config_key)
+        env = os.environ.get(setting.env)
+        if env:
+            return env
 
-        return DEFAULT.get(config_key)
+        conf = self.__cfg.key(setting.app, setting.name)
+        if conf:
+            if isinstance(conf, setting.type):
+                return conf
+            else:
+                msg = "[%s] wrong type from config: %s" % (setting.name, conf)
+                sys.exit(msg)
 
-    def __set_all(self):
-        for p in PARAMS:
-            value = self.__priority_param(self.__args.get(PARAMS[p]["var"]),
-                                          PARAMS[p]["env"],
-                                          PARAMS[p]["var"])
-            if value:
-                envvar = "_" + PARAMS[p]["env"]
-                os.environ[envvar] = str(value)
+        return setting.default
 
-    def __check_required(self):
-        if not Params.plugin_path():
-            sys.exit(self.__cli.print_help())
+    def set_params(self):
+        for s in self.__settings:
+            if not s.env:
+                continue
 
-        if Params.celery() and not Params.broker_url():
-            sys.exit(self.__cli.print_help())
+            value = self.__check_priority(s)
+            if s.configname:
+                self.__cfg.replace(s.app, s.name, {s.configname: value})
+                continue
 
-        if Params.celery() and not Params.queue_name():
-            sys.exit(self.__cli.print_help())
+            if s.app and s.app in [CELERY, GUNICORN]:
+                self.__cfg.remove(s.app, s.name)
 
-        if not Params.celery() and not Params.gunicorn():
-            sys.exit("neither Celery nor Gunicorn have been selected")
+            s.set_value(value)
+
+        os.environ["_" + CONF_CELERY] = json.dumps(self.__cfg.key(CELERY))
+        os.environ["_" + CONF_GUNICORN] = json.dumps(self.__cfg.key(GUNICORN))
 
     @staticmethod
     def namespace():
         return "Micro"
 
     @staticmethod
-    def plugin_path():
-        return os.environ.get("_" + PARAMS[PLUGIN_PATH]["env"])
+    def config_celery():
+        return json.loads(os.environ.get("_" + CONF_CELERY))
 
     @staticmethod
-    def broker_url():
-        return os.environ.get("_" + PARAMS[BROKER_URL]["env"])
-
-    @staticmethod
-    def queue_name():
-        return os.environ.get("_" + PARAMS[QUEUE_NAME]["env"])
-
-    @staticmethod
-    def hostname():
-        return os.environ.get("_" + PARAMS[HOSTNAME]["env"])
-
-    @staticmethod
-    def num_workers():
-        return int(os.environ.get("_" + PARAMS[NUM_WORKERS]["env"]))
-
-    @staticmethod
-    def log_level():
-        return os.environ.get("_" + PARAMS[LOG_LEVEL]["env"])
-
-    @staticmethod
-    def log_path():
-        return os.environ.get("_" + PARAMS[LOG_PATH]["env"])
-
-    @staticmethod
-    def celery_log_level():
-        return os.environ.get("_" + PARAMS[CELERY_LOG_LEVEL]["env"])
-
-    @staticmethod
-    def celery_log_path():
-        return os.environ.get("_" + PARAMS[CELERY_LOG_PATH]["env"])
-
-    @staticmethod
-    def celery_pid_path():
-        return os.environ.get("_" + PARAMS[CELERY_PID_PATH]["env"])
-
-    @staticmethod
-    def celery():
-        return os.environ.get("_" + PARAMS[CELERY]["env"])
-
-    @staticmethod
-    def gunicorn():
-        return os.environ.get("_" + PARAMS[GUNICORN]["env"])
-
-    @staticmethod
-    def bind():
-        return os.environ.get("_" + PARAMS[BIND]["env"])
+    def config_gunicorn():
+        return json.loads(os.environ.get("_" + CONF_GUNICORN))
