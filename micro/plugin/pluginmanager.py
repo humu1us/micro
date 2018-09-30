@@ -9,19 +9,12 @@ from ..core.params import Params
 
 class PluginManager:
     def __init__(self):
+        Params()
         self.__INTERFACE = "interface.py"
         self.__log = Logger()
-        self.__plugin_path = self.__plugin_path()
+        self.__plugin_path = Params.plugin_path()
         self.__plugins = {}
         self.__load()
-
-    def __plugin_path(self):
-        path = Params.plugin_path()
-
-        if not os.path.isdir(path):
-            sys.exit("ERROR: plugins path no name a folder: {}".format(path))
-
-        return path
 
     def instance(self, name):
         pdesc = self.__plugins.get(name)
