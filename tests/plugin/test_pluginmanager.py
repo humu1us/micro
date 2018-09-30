@@ -1,4 +1,5 @@
 import os
+import shutil
 from unittest import TestCase
 from testfixtures import LogCapture
 from micro.core.params import Params
@@ -6,43 +7,41 @@ from micro.plugin.pluginmanager import PluginManager
 
 
 class TestPluginManager(TestCase):
-    def setUp(self):
-        self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                                   os.path.pardir))
-        self.path = os.path.join(self.parent, "resources", "plugin")
-        os.environ["MICRO_BROKER_URL"] = "broker_test"
-        os.environ["MICRO_QUEUE_NAME"] = "queue_test"
-        os.environ["MICRO_LOG_PATH"] = self.parent
-        os.environ["MICRO_CELERY"] = "1"
+    @classmethod
+    def setUpClass(cls):
+        parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                              os.path.pardir))
 
-    def tearDown(self):
-        del os.environ["MICRO_PLUGIN_PATH"]
-        del os.environ["MICRO_BROKER_URL"]
-        del os.environ["MICRO_QUEUE_NAME"]
-        del os.environ["MICRO_LOG_PATH"]
-        del os.environ["MICRO_CELERY"]
+        path = os.path.join(parent, "resources", "test_config.json")
+        cls.plugins = os.path.join(parent, "resources", "error_plugins")
+        os.environ["MICRO_CONFIG_FILE"] = path
+        cls.test_folders = [
+            ["MICRO_PLUGIN_PATH", cls.plugins],
+            ["MICRO_LOG_LEVEL", "INFO"],
+            ["MICRO_LOG_FOLDER_PATH", "/tmp/micro_plgmng_logs"],
+            ["MICRO_PID_FOLDER_PATH", "/tmp/micro_plgmng_pids"]
+        ]
+        for f in cls.test_folders:
+            os.environ[f[0]] = f[1]
+            os.makedirs(f[1], exist_ok=True)
+
+        Params(setall=True).set_params()
+
+    @classmethod
+    def tearDownClass(cls):
+        del os.environ["MICRO_CONFIG_FILE"]
+        for f in cls.test_folders:
+            del os.environ[f[0]]
+            if f[1] == cls.plugins:
+                continue
+            shutil.rmtree(f[1])
 
     def test_contructor(self):
-        os.environ["MICRO_PLUGIN_PATH"] = "this_is_not_a_path"
-        Params()
-
-        with self.assertRaises(SystemExit) as se:
-            PluginManager()
-
-        err = "ERROR: plugins path no name a folder: "
-        err += "this_is_not_a_path"
-        self.assertEqual(se.exception.args[0], err)
-
-        os.environ["MICRO_PLUGIN_PATH"] = "/"
-        Params()
         pm = PluginManager()
         self.assertEqual(type(pm), PluginManager)
 
     def test_error_plugins(self):
-        path = os.path.join(self.parent, "resources", "error_plugins")
-        os.environ["MICRO_PLUGIN_PATH"] = path
-        Params()
-
+        path = self.plugins
         with LogCapture("Micro") as logs:
             PluginManager()
         logs.check(

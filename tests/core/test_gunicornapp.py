@@ -1,40 +1,46 @@
 import os
+import shutil
 from unittest import TestCase
 from flask import Flask
 from micro.core.params import Params
 
 
-class TestConfig(TestCase):
-    def setUp(self):
-        self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                                   os.path.pardir))
-        self.file = os.path.join(self.parent, "resources", "test_config.json")
-        self.bind = "localhost:3050"
-        self.num_workers = 5
-        os.environ["MICRO_PLUGIN_PATH"] = self.parent
-        os.environ["MICRO_BROKER_URL"] = "broker_test"
-        os.environ["MICRO_QUEUE_NAME"] = "queue_test"
-        os.environ["MICRO_NUM_WORKERS"] = str(self.num_workers)
-        os.environ["MICRO_GUNICORN_BIND"] = self.bind
-        os.environ["MICRO_LOG_PATH"] = self.parent
-        os.environ["MICRO_GUNICORN"] = "1"
-        Params()
+class TestGunicornApp(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                              os.path.pardir))
 
-    def tearDown(self):
-        del os.environ["MICRO_PLUGIN_PATH"]
-        del os.environ["MICRO_BROKER_URL"]
-        del os.environ["MICRO_QUEUE_NAME"]
-        del os.environ["MICRO_NUM_WORKERS"]
-        del os.environ["MICRO_GUNICORN_BIND"]
-        del os.environ["MICRO_LOG_PATH"]
+        config = os.path.join(parent, "resources", "test_config.json")
+        plugins = os.path.join(parent, "resources", "plugin")
+        os.environ["MICRO_CONFIG_FILE"] = config
+        os.environ["MICRO_PLUGIN_PATH"] = plugins
+        os.environ["MICRO_GUNICORN"] = "1"
+        cls.test_folders = [
+            ["MICRO_PLUGIN_PATH", "/tmp/micro_gunicornapp_plugin"],
+            ["MICRO_LOG_FOLDER_PATH", "/tmp/micro_gunicornapp_logs"],
+            ["MICRO_PID_FOLDER_PATH", "/tmp/micro_gunicornapp_pids"]
+        ]
+        for f in cls.test_folders:
+            os.environ[f[0]] = f[1]
+            os.makedirs(f[1], exist_ok=True)
+
+        Params(setall=True).set_params()
+
+    @classmethod
+    def tearDownClass(cls):
+        del os.environ["MICRO_CONFIG_FILE"]
         del os.environ["MICRO_GUNICORN"]
+        for f in cls.test_folders:
+            del os.environ[f[0]]
+            shutil.rmtree(f[1])
 
     def test_load_config(self):
         from micro.core.gunicornapp import GunicornApp
         app = GunicornApp()
         app.load_config()
-        self.assertEqual(app.cfg.bind[0], self.bind)
-        self.assertEqual(app.cfg.workers, self.num_workers)
+        self.assertEqual(app.cfg.bind[0], "localhost:5050")
+        self.assertEqual(app.cfg.workers, 8)
         self.assertTrue(app.cfg.daemon)
 
     def test_load(self):

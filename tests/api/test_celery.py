@@ -1,29 +1,32 @@
-import os
 import json
+import os
+import shutil
 from unittest import TestCase
 from micro.core.params import Params
 
 
 class TestCeleryEndpoints(TestCase):
-    def setUp(self):
-        self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                                   os.path.pardir))
-        self.path = os.path.join(self.parent, "resources", "plugin")
-        os.environ["MICRO_PLUGIN_PATH"] = self.path
-        os.environ["MICRO_BROKER_URL"] = "broker_test"
-        os.environ["MICRO_QUEUE_NAME"] = "queue_test"
-        os.environ["MICRO_LOG_PATH"] = self.parent
-        os.environ["MICRO_LOG_FROM"] = "INFO"
-        os.environ["MICRO_CELERY"] = "1"
-        Params()
+    @classmethod
+    def setUpClass(cls):
+        parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                              os.path.pardir))
+        plugins = os.path.join(parent, "resources", "plugin")
+        os.environ["MICRO_PLUGIN_PATH"] = plugins
+        cls.test_folders = [
+            ["MICRO_LOG_FOLDER_PATH", "/tmp/micro_apirest_logs"],
+            ["MICRO_PID_FOLDER_PATH", "/tmp/micro_apirest_pids"]
+        ]
+        for f in cls.test_folders:
+            os.environ[f[0]] = f[1]
+            os.makedirs(f[1], exist_ok=True)
 
-    def tearDown(self):
-        del os.environ["MICRO_PLUGIN_PATH"]
-        del os.environ["MICRO_BROKER_URL"]
-        del os.environ["MICRO_QUEUE_NAME"]
-        del os.environ["MICRO_LOG_PATH"]
-        del os.environ["MICRO_LOG_FROM"]
-        del os.environ["MICRO_CELERY"]
+        Params(setall=True).set_params()
+
+    @classmethod
+    def tearDownClass(cls):
+        for f in cls.test_folders:
+            del os.environ[f[0]]
+            shutil.rmtree(f[1])
 
     def test_plugins(self):
         from micro.api.celery import plugins

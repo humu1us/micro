@@ -1,13 +1,18 @@
 {
-    "plugin_path": "/path/to/plugins/folder",
-    "broker_url": "test://user:pass@host:port",
-    "queue_name": "queue_name",
-    "hostname": "config_hostname",
-    "num_workers": 10,
-    "bind": "localhost:5050",
-    "log_level": "ERROR",
-    "log_path": "/tmp/micro/logs",
-    "celery_log_level": "ERROR",
-    "celery_log_path": "/tmp/micro/celery/logs",
-    "celery_pid_path": "/tmp/micro/celery/pids"
+    "micro": {
+        "plugin_path": "/tmp/micro/plugins",
+        "log_level": "ERROR",
+        "log_folder_path": "/tmp/micro/logs",
+        "log_file_name": "micro_test.log",
+        "pid_folder_path": "/tmp/micro/pids"
+    },
+    "celery": {
+        "broker_url": "test://user:pass@host:port",
+        "task_queues": "queue_name",
+        "workers": 10
+    },
+    "gunicorn": {
+        "bind": "localhost:5050",
+        "workers": 8
+    }
 }

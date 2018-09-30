@@ -1,5 +1,6 @@
-import os
 import json
+import os
+import shutil
 from unittest import TestCase
 from flask import Flask
 from micro.core.params import Params
@@ -8,30 +9,30 @@ from micro.core.params import Params
 class TestAPIRestEndpoints(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                                  os.path.pardir))
-        cls.path = os.path.join(cls.parent, "resources", "plugin")
-        os.environ["MICRO_PLUGIN_PATH"] = cls.path
-        os.environ["MICRO_BROKER_URL"] = "broker_test"
-        os.environ["MICRO_QUEUE_NAME"] = "queue_test"
-        os.environ["MICRO_LOG_PATH"] = cls.parent
-        os.environ["MICRO_LOG_FROM"] = "INFO"
-        os.environ["MICRO_CELERY"] = "1"
-        Params()
+        parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                              os.path.pardir))
+        plugins = os.path.join(parent, "resources", "plugin")
+        os.environ["MICRO_PLUGIN_PATH"] = plugins
+        cls.test_folders = [
+            ["MICRO_LOG_FOLDER_PATH", "/tmp/micro_apirest_logs"],
+            ["MICRO_PID_FOLDER_PATH", "/tmp/micro_apirest_pids"]
+        ]
+        for f in cls.test_folders:
+            os.environ[f[0]] = f[1]
+            os.makedirs(f[1], exist_ok=True)
+
+        Params(setall=True).set_params()
         from micro.api.apirest import endpoints
         cls.app = Flask("micro_test")
         cls.app.register_blueprint(endpoints)
 
     @classmethod
     def tearDownClass(cls):
-        del os.environ["MICRO_PLUGIN_PATH"]
-        del os.environ["MICRO_BROKER_URL"]
-        del os.environ["MICRO_QUEUE_NAME"]
-        del os.environ["MICRO_LOG_PATH"]
-        del os.environ["MICRO_LOG_FROM"]
-        del os.environ["MICRO_CELERY"]
+        for f in cls.test_folders:
+            del os.environ[f[0]]
+            shutil.rmtree(f[1])
 
-    def test_plugins(self):
+    def test_plugins_api(self):
         resp = [{
             "name": "Example Plugin",
             "version": None,
