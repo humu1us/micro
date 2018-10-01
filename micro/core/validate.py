@@ -5,13 +5,11 @@ import sys
 
 class Validate:
     def positive_int(self, value):
-        try:
-            value = int(value)
-        except ValueError:
+        if not isinstance(value, int) or isinstance(value, bool):
             sys.exit("[%s] must be integer: %s" % (self.name, value))
-
-        if value < 0:
+        if value < 1:
             sys.exit("[%s] must be positive: %s" % (self.name, value))
+
         return value
 
     def file_exist(self, value):
