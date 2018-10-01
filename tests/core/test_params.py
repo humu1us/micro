@@ -1,9 +1,11 @@
 import json
 import os
 import shutil
+from argparse import ArgumentParser
 from unittest import TestCase
 from micro import __version__
 from micro.core.params import Params
+from micro.core.settingbase import SettingBase
 from tests.utils.fakestdout import StdoutLock
 
 
@@ -95,3 +97,11 @@ class TestParams(TestCase):
 
         version = "setup.py (version %s)" % __version__
         self.assertEqual(lock.stdout.strip(), version)
+
+    def test_no_cli(self):
+        class SettingTest(SettingBase):
+            name = "name"
+
+        cli = ArgumentParser()
+        setting = SettingTest(parse=cli, defaults={})
+        self.assertEqual(setting.name, "name")

@@ -47,18 +47,42 @@ class TestPluginManager(TestCase):
         logs.check(
             ("Micro",
              "INFO",
-             "Load plugins from: " + path),
+             "Load plugins from: "
+             + path + ""),
             ("Micro",
              "INFO",
-             "Load plugins, checking: " + path + "/example_noname"),
+             "Load plugins, checking: "
+             + path + "/example_nointerface"),
             ("Micro",
              "WARNING",
-             "Plugin " + path + "/example_noname " +
+             "Plugin "
+             + path + "/example_nointerface "
+             "is not valid. Omitted"),
+            ("Micro",
+             "INFO",
+             "Load plugins, checking: "
+             + path + "/example_noname"),
+            ("Micro",
+             "WARNING",
+             "Plugin "
+             + path + "/example_noname "
              "does not has name. Omitted"),
             ("Micro",
              "INFO",
-             "Load plugins, checking: " + path + "/example_notype"),
+             "Load plugins, checking: "
+             + path + "/example_notype"),
             ("Micro",
              "WARNING",
-             "Plugin " + path + "/example_notype " + "is not valid. Omitted")
+             "Plugin "
+             + path + "/example_notype "
+             "is not valid. Omitted"),
+            ("Micro",
+             "INFO",
+             "Load plugins, checking: "
+             + path + "/file_to_ommit"),
+            ("Micro",
+             "WARNING",
+             "File found in the plugins folder: "
+             + path + "/file_to_ommit. "
+             "Omitted")
         )
