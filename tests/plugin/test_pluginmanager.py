@@ -44,7 +44,7 @@ class TestPluginManager(TestCase):
         path = self.plugins
         with LogCapture("Micro") as logs:
             PluginManager()
-        logs.check(
+        logs.check_present(
             ("Micro",
              "INFO",
              "Load plugins from: "
@@ -84,5 +84,6 @@ class TestPluginManager(TestCase):
              "WARNING",
              "File found in the plugins folder: "
              + path + "/file_to_ommit. "
-             "Omitted")
+             "Omitted"),
+            order_matters=False
         )
