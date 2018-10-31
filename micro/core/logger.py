@@ -3,7 +3,6 @@ import logging
 from .params import Params
 from ..core.utils import set_folder
 
-FILE_NAME = "micro.log"
 LOG_FORMAT = "[%(asctime)s] %(levelname)s: " + \
     "%(message)s - %(filename)s, %(funcName)s, %(lineno)s"
 LOG_DEBUG_FORMAT = "[%(asctime)s] [%(process)d] %(levelname)s: " + \
@@ -12,7 +11,9 @@ LOG_DEBUG_FORMAT = "[%(asctime)s] [%(process)d] %(levelname)s: " + \
 
 class Logger():
     def __init__(self):
-        self.__path = Params.log_path()
+        Params()
+        self.__name = Params.log_file_name()
+        self.__path = Params.log_folder_path()
         self.__level = logging.getLevelName(Params.log_level())
         self.__micro_log = Params.namespace()
         self.__celery_log = "celery"
@@ -37,7 +38,7 @@ class Logger():
             self.__set_file_handler()
 
     def __set_file_handler(self):
-        handler = logging.FileHandler(os.path.join(self.__path, FILE_NAME))
+        handler = logging.FileHandler(os.path.join(self.__path, self.__name))
         handler.setLevel(self.__level)
         handler.setFormatter(self.__formatter)
         self.__micro.addHandler(handler)

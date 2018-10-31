@@ -10,15 +10,15 @@ from .params import Params
 
 class GunicornApp(BaseApplication):
     def __init__(self):
+        Params()
         self.__namespace = Params.namespace()
         self.__app = Flask(self.__namespace)
         self.__app.register_blueprint(endpoints)
         self.__options = {
             "daemon": True,
-            "bind": Params.bind(),
-            "workers": Params.num_workers(),
             "loglevel": Params.log_level()
         }
+        self.__options.update(Params.config_gunicorn())
         super().__init__()
 
     def load_config(self):

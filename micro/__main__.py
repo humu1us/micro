@@ -3,7 +3,8 @@ from .core.params import Params
 
 
 def main():
-    Params()
+    params = Params(setall=True)
+    params.set_params()
 
     app = MicroApp()
     app.start()
