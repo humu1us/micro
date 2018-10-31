@@ -1,4 +1,5 @@
 import os
+import shutil
 from unittest import TestCase
 from testfixtures import LogCapture
 from micro.core import microapp
@@ -15,25 +16,34 @@ def fake_start_gunicorn():
 
 
 class TestMicroApp(TestCase):
-    def setUp(self):
-        self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                                   os.path.pardir))
-        self.path = os.path.join(self.parent, "resources", "plugin")
-        os.environ["MICRO_PLUGIN_PATH"] = self.path
-        os.environ["MICRO_BROKER_URL"] = "broker_test"
-        os.environ["MICRO_QUEUE_NAME"] = "queue_test"
-        os.environ["MICRO_LOG_PATH"] = self.parent
+    @classmethod
+    def setUpClass(cls):
+        path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                            os.path.pardir))
+
+        path = os.path.join(path, "resources", "test_config.json")
+        os.environ["MICRO_CONFIG_FILE"] = path
         os.environ["MICRO_CELERY"] = "1"
         os.environ["MICRO_GUNICORN"] = "1"
-        Params()
+        cls.test_folders = [
+            ["MICRO_PLUGIN_PATH", "/tmp/micro_microapp_plugin"],
+            ["MICRO_LOG_FOLDER_PATH", "/tmp/micro_microapp_logs"],
+            ["MICRO_PID_FOLDER_PATH", "/tmp/micro_microapp_pids"]
+        ]
+        for f in cls.test_folders:
+            os.environ[f[0]] = f[1]
+            os.makedirs(f[1], exist_ok=True)
 
-    def tearDown(self):
-        del os.environ["MICRO_PLUGIN_PATH"]
-        del os.environ["MICRO_BROKER_URL"]
-        del os.environ["MICRO_QUEUE_NAME"]
-        del os.environ["MICRO_LOG_PATH"]
+        Params(setall=True).set_params()
+
+    @classmethod
+    def tearDownClass(cls):
+        del os.environ["MICRO_CONFIG_FILE"]
         del os.environ["MICRO_CELERY"]
         del os.environ["MICRO_GUNICORN"]
+        for f in cls.test_folders:
+            del os.environ[f[0]]
+            shutil.rmtree(f[1])
 
     def test_nothing(self):
         del os.environ["_MICRO_CELERY"]

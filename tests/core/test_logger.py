@@ -1,30 +1,36 @@
 import os
+import shutil
 from unittest import TestCase
 from testfixtures import LogCapture
 from micro.core.logger import Logger
 from micro.core.params import Params
 
 
-class TestConfig(TestCase):
-    def setUp(self):
-        self.parent = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                                   os.path.pardir))
-        self.file = os.path.join(self.parent, "resources", "test_config.json")
-        os.environ["MICRO_PLUGIN_PATH"] = "plugin_path_test"
-        os.environ["MICRO_BROKER_URL"] = "broker_test"
-        os.environ["MICRO_QUEUE_NAME"] = "queue_test"
-        os.environ["MICRO_LOG_PATH"] = self.parent
-        os.environ["MICRO_LOG_LEVEL"] = "DEBUG"
-        os.environ["MICRO_CELERY"] = "1"
-        Params()
+class TestLogger(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                            os.path.pardir))
 
-    def tearDown(self):
-        del os.environ["MICRO_PLUGIN_PATH"]
-        del os.environ["MICRO_BROKER_URL"]
-        del os.environ["MICRO_QUEUE_NAME"]
-        del os.environ["MICRO_LOG_PATH"]
-        del os.environ["MICRO_LOG_LEVEL"]
-        del os.environ["MICRO_CELERY"]
+        path = os.path.join(path, "resources", "test_config.json")
+        os.environ["MICRO_CONFIG_FILE"] = path
+        cls.test_folders = [
+            ["MICRO_PLUGIN_PATH", "/tmp/micro_logger_plugin"],
+            ["MICRO_LOG_FOLDER_PATH", "/tmp/micro_logger_logs"],
+            ["MICRO_PID_FOLDER_PATH", "/tmp/micro_logger_pids"]
+        ]
+        for f in cls.test_folders:
+            os.environ[f[0]] = f[1]
+            os.makedirs(f[1], exist_ok=True)
+
+        Params(setall=True).set_params()
+
+    @classmethod
+    def tearDownClass(cls):
+        del os.environ["MICRO_CONFIG_FILE"]
+        for f in cls.test_folders:
+            del os.environ[f[0]]
+            shutil.rmtree(f[1])
 
     def test_debug(self):
         log = Logger()
