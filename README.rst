@@ -158,50 +158,68 @@ be used are:
 ::
 
     $ micro -h
-    usage: micro [--celery] [--gunicorn] [-p PLUGIN_PATH] [-c CONFIG_FILE]
-                 [-b BROKER_URL] [-q QUEUE_NAME] [-H HOSTNAME]
-                 [-w NUM_WORKERS] [-bi BIND] [-ll LOG_LEVEL] [-lp LOG_PATH]
-                 [-cll CELERY_LOG_LEVEL] [-clp CELERY_LOG_PATH]
-                 [-cpp CELERY_PID_PATH] [--default-params] [--version] [-h]
-
-    Micro arguments:
-
-    start services (choose at least one):
-      --celery              plugins available through Celery
-      --gunicorn            plugins available through API Rest
-
-    required arguments:
-      -p PLUGIN_PATH, --plugin-path PLUGIN_PATH
-                            path to the plugins folder
+    usage: micro [-d] [-h] [-v] [-c CONFIG_FILE] [-b BIND] [-B BROKER_URL]
+                 [-C] [-cw WORKERS] [-G] [-gw WORKERS] [-H HOSTNAME]
+                 [-ln LOG_FILE_NAME] [-lp LOG_FOLDER_PATH] [-ll LOG_LEVEL]
+                 [-pp PID_FOLDER_PATH] [-p PLUGIN_PATH] [-q TASK_QUEUES]
 
     optional arguments:
+      -d, --default-values  show default values and exit
+      -h, --help            show this help message and exit
+      -v, --version         show program's version and exit
       -c CONFIG_FILE, --config-file CONFIG_FILE
                             path to the config file
-      -b BROKER_URL, --broker-url BROKER_URL
-                            RabbitMQ URL
-      -q QUEUE_NAME, --queue-name QUEUE_NAME
-                            RabbitMQ queue name
+                            env: MICRO_CONFIG_FILE
+                            default: None
+      -b BIND, --bind BIND  Gunicorn bind, HOST:PORT
+                            env: MICRO_BIND
+                            default: 0.0.0.0:8000
+      -B BROKER_URL, --broker-url BROKER_URL
+                            Celery broker URL
+                            env: MICRO_BROKER_URL
+                            default: None
+      -C, --celery          plugins available through Celery
+                            env: MICRO_CELERY
+                            default: None
+      -cw WORKERS, --celery-workers WORKERS
+                            Celery number of workers
+                            env: MICRO_CELERY_WORKERS
+                            default: 1
+      -G, --gunicorn        plugins available through API Rest
+                            env: MICRO_GUNICORN
+                            default: None
+      -gw WORKERS, --gunicorn-workers WORKERS
+                            Gunicorn number of workers
+                            env: MICRO_GUNICORN_WORKERS
+                            default: 1
       -H HOSTNAME, --hostname HOSTNAME
                             Celery worker's hostname
-      -w NUM_WORKERS, --num-workers NUM_WORKERS
-                            set the Celery worker number
-      -bi BIND, --bind BIND
-                            Set the Gunicorn socket bind, HOST:PORT
+                            env: MICRO_HOSTNAME
+                            default: micro
+      -ln LOG_FILE_NAME, --log-file-name LOG_FILE_NAME
+                            Micro's log file name
+                            env: MICRO_LOG_FILE_NAME
+                            default: micro.log
+      -lp LOG_FOLDER_PATH, --log-folder-path LOG_FOLDER_PATH
+                            path to the Micro's log folder
+                            env: MICRO_LOG_FOLDER_PATH
+                            default: /var/log/micro
       -ll LOG_LEVEL, --log-level LOG_LEVEL
-                            log level: DEBUG, INFO, WARNING, ERROR, CRITICAL or
-                            FATAL
-      -lp LOG_PATH, --log-path LOG_PATH
-                            log file path
-      -cll CELERY_LOG_LEVEL, --celery-log-level CELERY_LOG_LEVEL
-                            Celery log level: DEBUG, INFO, WARNING, ERROR,
-                            CRITICAL or FATAL
-      -clp CELERY_LOG_PATH, --celery-log-path CELERY_LOG_PATH
-                            Celery log file path
-      -cpp CELERY_PID_PATH, --celery-pid-path CELERY_PID_PATH
-                            Celery PIDs path
-      --default-params      show default parameters
-      --version             show Micro version
-      -h, --help            Show this help message
+                            Micro's log level
+                            env: MICRO_LOG_LEVEL
+                            default: WARNING
+      -pp PID_FOLDER_PATH, --pid-folder-path PID_FOLDER_PATH
+                            path to the Micro's PID folder
+                            env: MICRO_PID_FOLDER_PATH
+                            default: /var/run/micro
+      -p PLUGIN_PATH, --plugin-path PLUGIN_PATH
+                            path to the plugins folder
+                            env: MICRO_PLUGIN_PATH
+                            default: None
+      -q TASK_QUEUES, --task-queues TASK_QUEUES
+                            Celery task queues
+                            env: MICRO_TASK_QUEUES
+                            default: None
 
 Environment variables
 ~~~~~~~~~~~~~~~~~~~~~
@@ -211,20 +229,20 @@ list of environment variables used are:
 
 ::
 
-    MICRO_CELERY             # plugins available through Celery
-    MICRO_GUNICORN           # plugins available through API Rest (Gunicorn)
-    MICRO_PLUGIN_PATH        # path to plugin folder: /path/to/plugin/folder
-    MICRO_CONFIG             # config file location: /path/to/config/config.json
+    MICRO_CONFIG_FILE        # config file location: /path/to/config/config.json
+    MICRO_BIND               # Gunicorn socket bind (host:port)
     MICRO_BROKER_URL         # broker url: ampq://user:pass@host:port//
-    MICRO_QUEUE_NAME         # queue name used
+    MICRO_CELERY             # plugins available through Celery
+    MICRO_CELERY_WORKERS     # number of Celery workers (integer number)
+    MICRO_GUNICORN           # plugins available through API Rest (Gunicorn)
+    MICRO_GUNICORN_WORKERS   # number of Gunicorn workers (integer number)
     MICRO_HOSTNAME           # workers hostname
-    MICRO_NUM_WORKERS        # number of workers to create (integer number)
-    MICRO_GUNICORN_BIND      # Gunicorn socket bind (host:port)
+    MICRO_LOG_FILE_NAME      # log file name: micro.log
+    MICRO_LOG_FOLDER_PATH    # path to log folder: /path/to/log/folder
     MICRO_LOG_LEVEL          # minimun log level to write: DEBUG, INFO, WARNING, ERROR, CRITICAL or FATAL
-    MICRO_LOG_PATH           # path to log folder: /path/to/plugin/folder
-    MICRO_CELERY_LOG_LEVEL   # minimun log level to write: DEBUG, INFO, WARNING, ERROR, CRITICAL or FATAL
-    MICRO_CELERY_LOG_PATH    # path to Celery log folder: /path/to/celery/log/folder
-    MICRO_CELERY_PID_PATH    # path to Celery pid folder: /path/to/celery/pid/folder
+    MICRO_PID_FOLDER_PATH    # path to Celery pid folder: /path/to/pid/folder
+    MICRO_PLUGIN_PATH        # path to plugin folder: /path/to/plugin/folder
+    MICRO_TASK_QUEUES        # queue name used
 
 Config file
 ~~~~~~~~~~~
@@ -233,18 +251,30 @@ The lowest priority is the use of a JSON config file. The path to this
 config file must be set using ``-c, --config-file`` CLI arguments or
 ``MICRO_CONFIG`` environment variable.
 
+Celery and Gunicorn configurations can be given through this config file as well.
+
 Config file example:
 
 .. code:: js
 
     {
-        "plugin_path": "/path/to/plugins/folder",
-        "broker_url": "ampq://user:pass@host:port//",
-        "queue_name": "micro_queue",
-        "hostname": "",
-        "num_workers": 2,
-        "bind": "0.0.0.0:5000",
-        "log_level": "WARNING",
+        "gunicorn": {
+            "bind": "0.0.0.0:8000",
+            "workers": 1
+        },
+        "celery": {
+            "broker_url": "",
+            "workers": 1,
+            "hostname": "micro",
+            "task_queues": ""
+        },
+        "micro": {
+            "log_file_name": "micro.log",
+            "log_folder_path": "/var/log/micro",
+            "log_level": "WARNING",
+            "pid_folder_path": "/var/run/micro",
+            "plugin_path": ""
+        }
     }
 
 A config file skeleton can be created using the following command:
@@ -253,24 +283,7 @@ A config file skeleton can be created using the following command:
 Default values
 ~~~~~~~~~~~~~~
 
-The default values are:
-
-::
-
-    $ micro --default-params
-    {
-        "plugin_path": "",
-        "broker_url": "",
-        "queue_name": "",
-        "hostname": "micro",
-        "num_workers": 1,
-        "bind": "0.0.0.0:8000",
-        "log_level": "INFO",
-        "log_path": "/var/log/micro",
-        "celery_log_level": "INFO",
-        "celery_log_path": "/var/log/micro/celery",
-        "celery_pid_path": "/var/run/micro/celery"
-    }
+The default values are the same shown above.
 
 Docker
 ------
@@ -309,13 +322,13 @@ example to run Micro with Celery you can do:
         -v /path/to/plugins:/etc/micro/plugins \
         -v /path/to/log:/var/log/micro \
         -e MICRO_BROKER_URL=amqp://guest:guest@my_host:5672// \
-        -e MICRO_QUEUE_NAME=test \
+        -e MICRO_TASK_QUEUES=test \
         -e MICRO_HOSTNAME=my_host \
-        -e MICRO_NUM_WORKERS=2 \
+        -e MICRO_CELERY_WORKERS=2 \
         -e MICRO_CELERY=1 \
         micro:<tag>
 
-``MICRO_BROKER_URL`` and ``MICRO_QUEUE_NAME`` are the only mandatory
+``MICRO_BROKER_URL`` and ``MICRO_TASK_QUEUES`` are the only mandatory
 environment variables to set when Celery will be used.
 
 When Micro will be run with API Rest you have to bind the Gunicorn port:
@@ -326,7 +339,7 @@ When Micro will be run with API Rest you have to bind the Gunicorn port:
         -v /path/to/plugins:/etc/micro/plugins \
         -v /path/to/log:/var/log/micro \
         -e MICRO_BIND=0.0.0.0:5000 \
-        -e MICRO_NUM_WORKERS=2 \
+        -e MICRO_GUNICORN_WORKERS=2 \
         -e MICRO_GUNICORN=1 \
         -p 5000:5000 \
         micro:<tag>
