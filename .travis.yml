@@ -6,5 +6,5 @@ script:
     - 'python setup.py test'
 
 after_success:
-    - pip install coveralls
+    - pip install python-coveralls
     - coveralls
