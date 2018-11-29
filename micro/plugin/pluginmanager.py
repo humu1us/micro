@@ -1,6 +1,5 @@
 import os
 import sys
-import json
 import importlib.util as imp
 from .pluginbase import PluginBase
 from ..core.logger import Logger
@@ -34,15 +33,15 @@ class PluginManager:
             }
             result.append(plugin)
 
-        return json.dumps(result)
+        return result
 
     def info(self, name):
         plg = self.__plugins.get(name)
 
         if not plg:
-            return json.dumps({"error": "plugin not found"})
+            return {"error": "plugin not found"}
 
-        plugin = {
+        return {
             "name": plg.name,
             "version": plg.version,
             "url": plg.url,
@@ -52,21 +51,17 @@ class PluginManager:
             "long_description": plg.long_description
         }
 
-        return json.dumps(plugin)
-
     def help(self, name):
         plg = self.__plugins.get(name)
 
         if not plg:
-            return json.dumps({"error": "plugin not found"})
+            return {"error": "plugin not found"}
 
-        plugin = {
+        return {
             "name": plg.name,
             "version": plg.version,
             "help": plg.plugin_help
         }
-
-        return json.dumps(plugin)
 
     def __load(self):
         self.__log.info("Load plugins from: {}".format(self.__plugin_path))
