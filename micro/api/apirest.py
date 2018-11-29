@@ -1,3 +1,5 @@
+import json
+from flask import jsonify
 from flask import request
 from flask import Blueprint
 from .endpoints import _help
@@ -10,20 +12,26 @@ endpoints = Blueprint("endpoints", __name__)
 
 @endpoints.route("/plugins", methods=["GET"])
 def plugins():
-    return _plugins()
+    return jsonify(_plugins())
 
 
 @endpoints.route("/info/<name>", methods=["GET"])
 def info(name):
-    return _info(name)
+    return jsonify(_info(name))
 
 
 @endpoints.route("/help/<name>", methods=["GET"])
 def help(name):
-    return _help(name)
+    return jsonify(_help(name))
 
 
 @endpoints.route("/run/<name>", methods=["POST"])
 def run(name):
     kwargs = request.get_json()
-    return _run(name, **kwargs)
+    resp = _run(name, **kwargs)
+    try:
+        resp = json.loads(resp)
+    except ValueError:
+        pass
+
+    return jsonify(resp)
