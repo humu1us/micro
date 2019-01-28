@@ -278,7 +278,7 @@ Config file example:
     }
 
 A config file skeleton can be created using the following command:
-``$ micro --default-params > config.json``
+``$ micro --default-values > config.json``
 
 Default values
 ~~~~~~~~~~~~~~
