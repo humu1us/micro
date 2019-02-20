@@ -221,6 +221,8 @@ be used are:
                             env: MICRO_TASK_QUEUES
                             default: None
 
+**IMPORTANT:** `-G`, `--gunicorn`  or `-C`, `--celery`, or both, must be included otherwise Micro will finish without any message
+ 
 Environment variables
 ~~~~~~~~~~~~~~~~~~~~~
 
