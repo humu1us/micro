@@ -22,16 +22,22 @@ class MicroApp():
     def __start_celery(self):
         if not self.__celery:
             self.__log.warning("CeleryApp not started")
+            print("CeleryApp not started")
             return
 
+        self.__log.info("Starting CeleryApp")
+        print("Starting CeleryApp")
         proc = Process(target=start_celery)
         proc.start()
 
     def __start_gunicorn(self):
         if not self.__gunicorn:
             self.__log.warning("GunicornApp not started")
+            print("GunicornApp not started")
             return
 
+        self.__log.info("Starting GunicornApp")
+        print("Starting GunicornApp")
         proc = Process(target=start_gunicorn)
         proc.start()
 
