@@ -5,6 +5,8 @@ import sys
 
 class Validate:
     def positive_int(self, value):
+        if value is None:
+            return None
         if not isinstance(value, int) or isinstance(value, bool):
             sys.exit("[%s] must be integer: %s" % (self.name, value))
         if value < 1:

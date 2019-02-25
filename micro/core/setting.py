@@ -11,6 +11,7 @@ class Celery(SettingBase):
     cli = ["-C", "--celery"]
     env = "MICRO_CELERY"
     type = bool
+    default = False
     action = "store_true"
     validator = Validate.bool
     description = "plugins available through Celery"
@@ -21,6 +22,7 @@ class Gunicorn(SettingBase):
     cli = ["-G", "--gunicorn"]
     env = "MICRO_GUNICORN"
     type = bool
+    default = False
     action = "store_true"
     validator = Validate.bool
     description = "plugins available through API Rest"
