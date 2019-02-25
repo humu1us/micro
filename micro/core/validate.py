@@ -5,6 +5,8 @@ import sys
 
 class Validate:
     def positive_int(self, value):
+        if value is None:
+            return None
         if not isinstance(value, int) or isinstance(value, bool):
             sys.exit("[%s] must be integer: %s" % (self.name, value))
         if value < 1:
@@ -13,7 +15,7 @@ class Validate:
 
     def file_exist(self, value):
         if value is None:
-            sys.exit("[%s] should be a file path: %s" % (self.name, value))
+            return None
         if not os.path.exists(value):
             sys.exit("[%s] file does not exists: %s" % (self.name, value))
         if not os.path.isfile(value):
@@ -22,7 +24,7 @@ class Validate:
 
     def folder_exist(self, value):
         if value is None:
-            sys.exit("[%s] should be a folder path: %s" % (self.name, value))
+            return None
         if os.path.isfile(value):
             msg = "[%s] path name a file instead a folder: %s" % (self.name,
                                                                   value)
@@ -37,7 +39,7 @@ class Validate:
 
     def bool(self, value):
         if value is None:
-            sys.exit("[%s] should be a bool: %s" % (self.name, value))
+            return None
         if isinstance(value, bool):
             return value
         sys.exit("[%s] must be bool: %s" % (self.name, value))
@@ -53,7 +55,7 @@ class Validate:
             logging.FATAL
         ]
         if value is None:
-            sys.exit("[%s] should be a logging level: %s" % (self.name, value))
+            return None
         if isinstance(value, int) and value in levels:
             return value
         if isinstance(value, str) and logging.getLevelName(value) in levels:
