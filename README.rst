@@ -66,8 +66,11 @@ Write Micro plugins is very simple all that you need is to create
 a file called ``interface.py`` and a class which is the plugin itself.
 
 - the ``interface.py`` file defines the plugin metadata
-- the plugin class must inherit from ``micro.plugin.pluginbasePluginBase``
-  and must return Python dictionaries
+- the plugin class must:
+
+  - inherit from ``micro.plugin.pluginbase.PluginBase``
+  - implement the ``run`` method
+  - return Python dictionaries on that `run` method
 
 .. code:: python
 
