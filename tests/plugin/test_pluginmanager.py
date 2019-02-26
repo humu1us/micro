@@ -85,5 +85,12 @@ class TestPluginManager(TestCase):
              "File found in the plugins folder: "
              + path + "/file_to_ommit. "
              "Omitted"),
+            ("Micro",
+             "INFO",
+             "Load plugins, checking: "
+             + path + "/example_nodict"),
+            ("Micro",
+             "INFO",
+             "Plugin found: Example Plugin No Dict"),
             order_matters=False
         )

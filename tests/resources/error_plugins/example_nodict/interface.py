@@ -2,16 +2,16 @@ from micro.plugin.pluginbase import PluginBase
 from micro.plugin.pluginbase import PluginDescription
 
 
-class ExamplePlugin(PluginBase):
+class ExamplePluginNoDict(PluginBase):
     # This is the method executed by Micro
     def run(self, name):
-        return {"msg": "Hello " + name + "!!!"}
+        return "Hello " + name + "!!!"
 
 
 # This description is required by Micro
 plugin = PluginDescription(
-    instance=ExamplePlugin,
-    name="Example Plugin",
+    instance=ExamplePluginNoDict,
+    name="Example Plugin No Dict",
     author="Jhon Doe",
     description="A very simple example plugin",
     long_description="This plugin is a very simple example, "

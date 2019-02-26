@@ -36,7 +36,9 @@ API Celery example (using micro-dev)
     '[{"name": "Example Plugin", "version": null, "description": "A very simple example plugin"}]'
     >>>
     >>> req.run.delay("Example plugin", name="Micro").wait()
-    'Hello Micro!!!'
+    {"msg": "Hello Micro!!!"}
+
+
 
 API Rest example (using requests)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -55,13 +57,17 @@ API Rest example (using requests)
     >>> headers = {'content-type': 'application/json'}
     >>> response = requests.request("POST", url, data=payload, headers=headers)
     >>> print(response.text)
-    Hello Micro!!!
+    {"msg": "Hello Micro!!!"}
 
 Micro plugins
 -------------
 
 Write Micro plugins is very simple all that you need is to create
-a file called ``interface.py`` this file defines the plugin as follow:
+a file called ``interface.py`` and a class which is the plugin itself.
+
+- the ``interface.py`` file defines the plugin metadata
+- the plugin class must inherit from ``micro.plugin.pluginbasePluginBase``
+  and must return Python dictionaries
 
 .. code:: python
 
@@ -74,8 +80,9 @@ a file called ``interface.py`` this file defines the plugin as follow:
             print("This is an example plugin")
 
         # This is the method executed by Micro
+        # Must return a Python dictionary
         def run(self, name):
-            return "Hello " + name + "!!!"
+            return {"msg": "Hello " + name + "!!!"}
 
 
     # This description is required by Micro

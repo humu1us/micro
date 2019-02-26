@@ -41,6 +41,7 @@ class TestAPIRestEndpoints(TestCase):
         with self.app.test_client() as client:
             response = client.get("/plugins")
             self.assertEquals(response.status_code, 200)
+            self.assertEquals(response.mimetype, "application/json")
             self.assertEquals(json.loads(response.data), resp)
 
     def test_info(self):
@@ -48,6 +49,7 @@ class TestAPIRestEndpoints(TestCase):
         with self.app.test_client() as client:
             response = client.get("/info/not-existent-plugin")
             self.assertEquals(response.status_code, 200)
+            self.assertEquals(response.mimetype, "application/json")
             self.assertEquals(json.loads(response.data), resp)
 
         long_description = "This plugin is a very simple example, " + \
@@ -63,7 +65,9 @@ class TestAPIRestEndpoints(TestCase):
         }
         with self.app.test_client() as client:
             response = client.get("/info/Example%20Plugin")
+            self.assertTrue(True)
             self.assertEquals(response.status_code, 200)
+            self.assertEquals(response.mimetype, "application/json")
             self.assertEquals(json.loads(response.data), resp)
 
     def test_help(self):
@@ -71,6 +75,7 @@ class TestAPIRestEndpoints(TestCase):
         with self.app.test_client() as client:
             response = client.get("/help/not-existent-plugin")
             self.assertEquals(response.status_code, 200)
+            self.assertEquals(response.mimetype, "application/json")
             self.assertEquals(json.loads(response.data), resp)
 
         resp = {
@@ -81,6 +86,7 @@ class TestAPIRestEndpoints(TestCase):
         with self.app.test_client() as client:
             response = client.get("/help/Example%20Plugin")
             self.assertEquals(response.status_code, 200)
+            self.assertEquals(response.mimetype, "application/json")
             self.assertEquals(json.loads(response.data), resp)
 
     def test_run(self):
@@ -91,6 +97,7 @@ class TestAPIRestEndpoints(TestCase):
                                    data=json.dumps(data),
                                    content_type="application/json")
             self.assertEquals(response.status_code, 200)
+            self.assertEquals(response.mimetype, "application/json")
             self.assertEquals(json.loads(response.data), resp)
 
         resp = {
@@ -101,6 +108,7 @@ class TestAPIRestEndpoints(TestCase):
                                    data=json.dumps(data),
                                    content_type="application/json")
             self.assertEquals(response.status_code, 200)
+            self.assertEquals(response.mimetype, "application/json")
             self.assertEquals(json.loads(response.data), resp)
 
         data = {"name": "World"}
@@ -109,4 +117,6 @@ class TestAPIRestEndpoints(TestCase):
                                    data=json.dumps(data),
                                    content_type="application/json")
             self.assertEquals(response.status_code, 200)
-            self.assertEquals(response.data.decode("utf-8"), "Hello World!!!")
+            self.assertEquals(response.mimetype, "application/json")
+            self.assertDictEqual(json.loads(response.data),
+                                 {"msg": "Hello World!!!"})

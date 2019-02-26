@@ -73,7 +73,7 @@ class TestCeleryEndpoints(TestCase):
         from micro.api.celery import run
         self.assertEqual(run.apply(args=("Example Plugin",),
                                    kwargs={"name": "World"}).get(),
-                         "Hello World!!!")
+                         json.dumps({"msg": "Hello World!!!"}))
 
         error = "run() got an unexpected keyword argument \'wrong_arg\'"
         self.assertEqual(run.apply(args=("Example Plugin",),

@@ -15,6 +15,8 @@ class TestValidate(TestCase):
         SettingTest.validator = Validate.positive_int
         s = SettingTest()
 
+        self.assertIsNone(s.validator(None))
+
         self.assertEqual(s.validator(1), 1)
         self.assertEqual(s.validator(10000000), 10000000)
 
