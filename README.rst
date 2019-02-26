@@ -36,7 +36,7 @@ API Celery example (using micro-dev)
     '[{"name": "Example Plugin", "version": null, "description": "A very simple example plugin"}]'
     >>>
     >>> req.run.delay("Example plugin", name="Micro").wait()
-    'Hello Micro!!!'
+    {"msg": "Hello Micro!!!"}
 
 
 
@@ -57,7 +57,7 @@ API Rest example (using requests)
     >>> headers = {'content-type': 'application/json'}
     >>> response = requests.request("POST", url, data=payload, headers=headers)
     >>> print(response.text)
-    Hello Micro!!!
+    {"msg": "Hello Micro!!!"}
 
 Micro plugins
 -------------
