@@ -1,4 +1,3 @@
-import json
 from ..core.logger import Logger
 from ..plugin.pluginmanager import PluginManager
 
@@ -27,12 +26,18 @@ def _run(plugin_name, **kwargs):
     if not plg:
         msg = "plugin not found"
         log.error(msg)
-        return json.dumps({"error": msg})
+        return {"error": msg}
 
     try:
         result = plg.run(**kwargs)
     except TypeError as e:
         log.error(str(e))
-        return json.dumps({"error": str(e)})
+        return {"error": str(e)}
+
+    if not isinstance(result, dict):
+        msg = "Micro plugins must return a Python dictionary"
+        response = "%s, type: %s, value: %s" % (msg, type(result), str(result))
+        log.error(response)
+        return {"error": response}
 
     return result

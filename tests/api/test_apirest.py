@@ -118,4 +118,5 @@ class TestAPIRestEndpoints(TestCase):
                                    content_type="application/json")
             self.assertEquals(response.status_code, 200)
             self.assertEquals(response.mimetype, "application/json")
-            self.assertEquals(json.loads(response.data), "Hello World!!!")
+            self.assertDictEqual(json.loads(response.data),
+                                 {"msg": "Hello World!!!"})

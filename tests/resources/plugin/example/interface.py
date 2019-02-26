@@ -5,7 +5,7 @@ from micro.plugin.pluginbase import PluginDescription
 class ExamplePlugin(PluginBase):
     # This is the method executed by Micro
     def run(self, name):
-        return "Hello " + name + "!!!"
+        return {"msg": "Hello " + name + "!!!"}
 
 
 # This description is required by Micro

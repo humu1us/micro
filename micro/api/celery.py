@@ -25,10 +25,4 @@ def help(name):
 
 @app.task(name=app.function_name("run"), queue=app.queue())
 def run(plugin_name, **kwargs):
-    resp = _run(plugin_name, **kwargs)
-    try:
-        resp = json.loads(resp)
-    except ValueError:
-        pass
-
-    return json.dumps(resp)
+    return json.dumps(_run(plugin_name, **kwargs))
