@@ -297,6 +297,26 @@ Default values
 
 The default values are the same shown above.
 
+CORS support
+~~~~~~~~~~~~
+
+Micro implements CORS support using `Flask-CORS <http://flask-cors.corydolphin.com/en/latest/>`
+the configuration must be made inside of the Gunicorn key using the ``cors`` key, the possible
+values are `listed in the CORS documentation <https://flask-cors.corydolphin.com/en/latest/api.html#flask_cors.CORS>`
+
+For example if this configuration allow any client:
+
+.. code:: js
+
+    {
+        "gunicorn": {
+            "bind": "0.0.0.0:8000",
+            "workers": 1,
+            "cors": {"origins": "*"}
+        },
+    ...
+
+
 Docker
 ------
 
