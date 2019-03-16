@@ -1,5 +1,6 @@
 import sys
 from flask import Flask
+from flask_cors import CORS
 from gunicorn import debug
 from gunicorn import util
 from gunicorn.app.base import BaseApplication
@@ -25,6 +26,8 @@ class GunicornApp(BaseApplication):
         for key, value in iteritems(self.__options):
             if key in self.cfg.settings and value is not None:
                 self.cfg.set(key.lower(), value)
+            elif key == "cors" and value is not None:
+                CORS(self.__app, **value)
 
     def load(self):
         return self.__app
